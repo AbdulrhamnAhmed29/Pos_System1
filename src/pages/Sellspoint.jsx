@@ -2,7 +2,7 @@ import React from 'react'
 
 function Sellspoint() {
   return (
-    <div>
+    <div className='text-black'>
       Sellspoint
     </div>
   )

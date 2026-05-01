@@ -4,7 +4,7 @@ import TopBar from './TopBar'
 
 const MainLayout = () => {
   return (
-    <div className="flex bg-[#050505] min-h-screen text-zinc-100">
+    <div className="flex bg-white min-h-screen text-zinc-100">
       <Sidebar />
       <div className="flex-1 mr-20">
         <TopBar />

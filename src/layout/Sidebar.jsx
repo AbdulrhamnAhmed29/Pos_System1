@@ -1,97 +1,82 @@
 import { useState, useEffect, useRef } from 'react'
-import { Menu, LogOut, LayoutDashboard, UtensilsCrossed, Layers, ShoppingCart, Zap, DollarSign, X } from 'lucide-react'
+import { 
+    Menu, LogOut, LayoutDashboard,  
+    Droplets, ClipboardList,  Package, X, 
+} from 'lucide-react'
 import { Link, useLocation } from 'react-router-dom'
 import { useLogout } from '../features/auth'
 
 const Sidebar = () => {
-    const [isOpen, setIsOpen] = useState(true)
+    const [isMobileOpen, setIsMobileOpen] = useState(false)
     const sidebarRef = useRef(null)
     const logout = useLogout()
     const location = useLocation()
 
-    // مصفوفة الروابط مع تصحيح الهمزات والمسميات
+    // مصفوفة الروابط المخصصة لمحل زيوت
     const menuItems = [
-        { path: '/dashboard', label: 'الإحصائيات', icon: LayoutDashboard },
-        { path: '/categories', label: 'إدارة الفئات', icon: Layers },
-        { path: '/sections', label: 'إدارة الأقسام', icon: UtensilsCrossed },
-        { path: '/products', label: 'إدارة المنتجات', icon: ShoppingCart },
-        { path: '/offers', label: 'إدارة العروض', icon: Zap },
-        { path: '/finance', label: 'إدارة الأسعار', icon: DollarSign },
+        { path: '/dashboard', label: 'لوحة التحكم', icon: LayoutDashboard },
+        { path: '/Sellspoint', label: 'نقطة البيع', icon: ClipboardList },
+        { path: '/products', label: 'إدارة المنتجات', icon: Package },
     ]
 
+    // إغلاق القائمة عند الضغط خارجها (للموبايل فقط)
     useEffect(() => {
         const handleClickOutside = (event) => {
-            if (isOpen && sidebarRef.current && !sidebarRef.current.contains(event.target)) {
-                setIsOpen(false)
+            if (isMobileOpen && sidebarRef.current && !sidebarRef.current.contains(event.target)) {
+                setIsMobileOpen(false)
             }
         }
         document.addEventListener('mousedown', handleClickOutside)
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside)
-        }
-    }, [isOpen])
+        return () => document.removeEventListener('mousedown', handleClickOutside)
+    }, [isMobileOpen])
 
     const isActive = (path) => location.pathname === path
 
     return (
         <>
-            {/* طبقة التعتيم الخلفية للموبايل */}
-            {isOpen && (
-                <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-30 transition-opacity lg:hidden" />
+            {/* زر الهامبرجر - يظهر فقط في الموبايل */}
+            <button
+                onClick={() => setIsMobileOpen(true)}
+                className="fixed top-4 right-4 z-50 p-2 bg-white border border-zinc-200 rounded-xl shadow-sm lg:hidden text-zinc-600"
+            >
+                <Menu size={24} />
+            </button>
+
+            {/* Overlay للموبايل */}
+            {isMobileOpen && (
+                <div className="fixed inset-0 bg-zinc-900/20 backdrop-blur-sm z-40 lg:hidden transition-opacity" />
             )}
 
-            <div
+            <aside
                 ref={sidebarRef}
                 dir="rtl"
-                className={`${isOpen ? 'w-64' : 'w-20'} 
-                bg-[#0a0a0a] h-screen transition-all duration-300 flex flex-col fixed right-0 top-0 z-40 
-                shadow-[10px_0_30px_rgba(0,0,0,0.5)] border-l border-white/5`}
+                className={`
+                    fixed top-0 right-0 z-40 h-screen transition-transform duration-300 ease-in-out
+                    bg-white border-l border-zinc-100 shadow-xl lg:shadow-none
+                    ${isMobileOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'}
+                    w-72 lg:w-64 xl:w-72 flex flex-col
+                `}
             >
-                {/* الهيدر (اللوجو واسم المطعم) */}
-                <div className="p-4 h-16 border-b border-white/10 flex items-center justify-between">
-                    {isOpen ? (
-                        <div className="flex items-center gap-2 overflow-hidden">
-                            <div className="w-10 h-10 flex-shrink-0">
-                                <img 
-                                    src="/images/logo.png" 
-                                    alt="بيتزا كينج لوجو" 
-                                    className="w-full h-full object-contain"
-                                />
-                            </div>
-                            <div className="text-right whitespace-nowrap">
-                                <p className="font-bold text-white leading-tight">بيتزا كينج</p>
-                                <p className="text-[10px] text-zinc-500 uppercase tracking-widest">The King</p>
-                            </div>
+                {/* Header: اسم السيستم واللوجو */}
+                <div className="p-6 h-20 border-b border-zinc-50 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-zinc-900 flex items-center justify-center shadow-lg shadow-zinc-200">
+                            <Droplets className="text-[#D4AF37]" size={22} />
                         </div>
-                    ) : (
-                        <div className="w-10 h-10 mx-auto">
-                            <img src="/images/logo.png" alt="لوجو" className="w-full h-full object-contain" />
+                        <div className="flex flex-col">
+                            <span className="font-black text-zinc-900 text-sm tracking-tight">ادارة الزيوت</span>
+                            <span className="text-[10px] text-[#D4AF37] font-bold uppercase tracking-wider">Oil Management</span>
                         </div>
-                    )}
+                    </div>
 
-                    {/* زر الإغلاق يظهر في الموبايل فقط */}
-                    {isOpen && (
-                        <button
-                            onClick={() => setIsOpen(false)}
-                            className="p-1.5 hover:bg-zinc-900/80 text-zinc-500 hover:text-white rounded-md transition-colors lg:hidden"
-                        >
-                            <X size={20} />
-                        </button>
-                    )}
+                    {/* زر إغلاق الموبايل */}
+                    <button onClick={() => setIsMobileOpen(false)} className="lg:hidden p-1 text-zinc-400">
+                        <X size={20} />
+                    </button>
                 </div>
 
-                {/* زر الفتح يظهر فقط عندما يكون السايد بار مغلقاً */}
-                {!isOpen && (
-                    <button
-                        onClick={() => setIsOpen(true)}
-                        className="p-3 mx-auto mt-4 hover:bg-zinc-900/50 rounded-xl text-white transition-all shadow-glow"
-                    >
-                        <Menu size={24} />
-                    </button>
-                )}
-
-                {/* قائمة الروابط */}
-                <nav className="flex-1 p-4 space-y-2 mt-2">
+                {/* Navigation Links */}
+                <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto custom-scrollbar">
                     {menuItems.map((item) => {
                         const Icon = item.icon
                         const active = isActive(item.path)
@@ -99,38 +84,46 @@ const Sidebar = () => {
                             <Link
                                 key={item.path}
                                 to={item.path}
-                                className={`flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-300 relative group 
-                                ${active
-                                    ? 'bg-gradient-to-l from-white/10 to-transparent text-white border border-white/20'
-                                    : 'text-zinc-500 hover:bg-zinc-900/50 hover:text-white'
-                                }`}
-                                title={!isOpen ? item.label : ''}
+                                onClick={() => setIsMobileOpen(false)}
+                                className={`
+                                    flex items-center gap-3 px-4 py-3.5 rounded-2xl transition-all duration-200 group
+                                    ${active 
+                                        ? 'bg-zinc-50 text-zinc-900 ring-1 ring-zinc-100 shadow-sm' 
+                                        : 'text-zinc-500 hover:bg-zinc-50/50 hover:text-zinc-900'}
+                                `}
                             >
-                                {/* مؤشر النشاط الجانبي */}
+                                <div className={`transition-colors ${active ? 'text-[#D4AF37]' : 'group-hover:text-[#D4AF37]'}`}>
+                                    <Icon size={20} strokeWidth={active ? 2.5 : 2} />
+                                </div>
+                                <span className={`text-sm ${active ? 'font-black' : 'font-bold'}`}>
+                                    {item.label}
+                                </span>
                                 {active && (
-                                    <span className="absolute right-0 top-1/4 bottom-1/4 w-1 bg-white rounded-l-full shadow-[0_0_10px_white]" />
+                                    <div className="mr-auto">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-[#D4AF37] shadow-[0_0_8px_#D4AF37]" />
+                                    </div>
                                 )}
-
-                                <Icon size={20} className={`${active ? 'text-white' : 'group-hover:text-white transition-colors'}`} />
-                                {isOpen && <span className="text-sm font-semibold">{item.label}</span>}
                             </Link>
                         )
                     })}
                 </nav>
 
-                {/* زر تسجيل الخروج */}
-                <div className="p-4 mt-auto border-t border-white/5">
+                {/* User / Logout Section */}
+                <div className="p-4 border-t border-zinc-50">
                     <button
                         onClick={logout}
-                        className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-xl bg-red-950/10 text-red-500 
-                        hover:bg-red-600 hover:text-white transition-all duration-300 text-sm font-bold 
-                        ${!isOpen && 'justify-center'}`}
-                        title="تسجيل الخروج"
+                        className="w-full flex items-center gap-3 px-4 py-4 rounded-2xl text-red-500 font-bold text-sm
+                        hover:bg-red-50 transition-all group"
                     >
-                        <LogOut size={20} />
-                        {isOpen && <span>تسجيل الخروج</span>}
+                        <LogOut size={20} strokeWidth={2.5} className="group-hover:-translate-x-1 transition-transform" />
+                        <span>تسجيل الخروج</span>
                     </button>
                 </div>
+            </aside>
+
+            {/* حاوية المحتوى الرئيسي - هذا الجزء مهم ليظهر بجانب السايد بار في الشاشات الكبيرة */}
+            <div className="lg:pr-64 xl:pr-72 transition-all duration-300">
+                {/* هنا يوضع الـ <Outlet /> أو محتوى الصفحة */}
             </div>
         </>
     )

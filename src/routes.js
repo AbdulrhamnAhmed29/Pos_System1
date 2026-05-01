@@ -3,11 +3,10 @@ import MainLayout from './layout/MainLayout' // تأكد من المسار ال�
 
 const SignIn = lazy(() => import('./features/auth/components/SignIn'));
 const Products = lazy(() => import('./pages/Products')); // مثال
-const Categories = lazy(() => import('./pages/Categories')); // مثال
-const Sections = lazy(() => import('./pages/Sections'));
-const Offers = lazy(() => import('./pages/Offers')); // مثال
 const finance = lazy(() => import('./pages/Finance'));
- // مثال
+const orderpage = lazy(() => import('./pages/Sellspoint'));
+
+// مثال
 
 
 export const routes = [
@@ -22,31 +21,27 @@ export const routes = [
         isPublic: false,
         children: [
             {
-                path: 'dashboard', 
-                element: () => <div>إحصائيات المنيو</div>, 
+                path: 'dashboard',
+                element: () => <div>إحصائيات المحل</div>,
             },
             {
-                path: 'products', // سيصبح المسار /products
+                path: 'products', 
                 element: Products,
             },
+
+
+
             {
-                path: 'categories', // سيصبح المسار /categories
-                element: Categories,
-            },
-             {
-                path: 'sections', // سيصبح المسار /sections
-                element: Sections,
-            },
-           
-              {
-                path: 'offers', // سيصبح المسار /offers
-                element: Offers,
-            },
-              {
-                path: 'finance', // سيصبح المسار /finance
+                path: 'finance', 
                 element: finance,
             },
             
+            {
+                path: 'Sellspoint', 
+                element: orderpage,
+            },
+
+
 
 
 

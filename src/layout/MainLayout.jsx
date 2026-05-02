@@ -6,9 +6,9 @@ const MainLayout = () => {
   return (
     <div className="flex bg-white min-h-screen text-zinc-100">
       <Sidebar />
-      <div className="flex-1 mr-20">
+      <div className="flex-1 ">
         <TopBar />
-        <main className="pt-20 p-6">
+        <main className="pt-20 p-3">
           <Outlet />
         </main>
       </div>

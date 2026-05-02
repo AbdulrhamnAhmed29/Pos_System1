@@ -2,3 +2,39 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+
+
+.shadow-custom {
+box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;}
+
+/* 1. تخصيص الحاوية العامة للسكرول */
+::-webkit-scrollbar {
+  width: 8px;              /* عرض السكرول الرأسي */
+  height: 8px;             /* ارتفاع السكرول الأفقي */
+}
+
+/* 2. خلفية المسار (الخلفية التي يتحرك عليها السكرول) */
+::-webkit-scrollbar-track {
+  background: #f4f4f5;     /* لون الـ zinc-100 القريب من الأبيض */
+  border-radius: 10px;
+}
+
+/* 3. المقبض (الجزء المتحرك الذي يمسكه المستخدم) */
+::-webkit-scrollbar-thumb {
+  background: #27272a;     /* لون الـ zinc-800 (رمادي غامق جداً) */
+  border-radius: 10px;
+  border: 2px solid #f4f4f5; /* يعطي مساحة صغيرة حول المقبض لجعله يبدو "طائفاً" */
+}
+
+/* 4. عند تمرير الماوس فوق المقبض (Hover) */
+::-webkit-scrollbar-thumb:hover {
+  background: #D4AF37;     /* يتحول للون الذهبي عند اللمس */
+}
+
+/* تخصيص السكرول لمتصفح Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #27272a #f4f4f5;
+}

@@ -1,7 +1,12 @@
 import { useState, useEffect, useRef } from 'react'
-import { 
-    Menu, LogOut, LayoutDashboard,  
-    Droplets, ClipboardList,  Package, X, 
+import {
+    Menu, LogOut, LayoutDashboard,
+    Droplets,  X,
+    Box,
+    Wallet,
+    ShoppingCart,
+    AlertTriangle,
+    Zap,
 } from 'lucide-react'
 import { Link, useLocation } from 'react-router-dom'
 import { useLogout } from '../features/auth'
@@ -12,12 +17,38 @@ const Sidebar = () => {
     const logout = useLogout()
     const location = useLocation()
 
-    // مصفوفة الروابط المخصصة لمحل زيوت
     const menuItems = [
-        { path: '/dashboard', label: 'لوحة التحكم', icon: LayoutDashboard },
-        { path: '/Sellspoint', label: 'نقطة البيع', icon: ClipboardList },
-        { path: '/products', label: 'إدارة المنتجات', icon: Package },
-    ]
+        {
+            path: '/pos',
+            label: 'نقطة البيع',
+            icon: ShoppingCart
+        },
+        {
+            path: '/dashboard',
+            label: 'الاحصائيات',
+            icon: LayoutDashboard
+        },
+        {
+            path: '/products',
+            label: 'إدارة المنتجات',
+            icon: Box
+        },
+        {
+            path: '/restock',
+            label: 'المنتجات الناقصة',
+            icon: AlertTriangle
+        },
+        {
+            path: '/sells',
+            label: 'ادارة المبيعات',
+            icon: Wallet,
+        },
+        {
+            path: '/expense',
+            label: 'ادارة المصاريف',
+            icon: Wallet
+        },
+    ];
 
     // إغلاق القائمة عند الضغط خارجها (للموبايل فقط)
     useEffect(() => {
@@ -52,7 +83,7 @@ const Sidebar = () => {
                 dir="rtl"
                 className={`
                     fixed top-0 right-0 z-40 h-screen transition-transform duration-300 ease-in-out
-                    bg-white border-l border-zinc-100 shadow-xl lg:shadow-none
+                    bg-white border-l border-zinc-100  shadow-lg
                     ${isMobileOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'}
                     w-72 lg:w-64 xl:w-72 flex flex-col
                 `}
@@ -87,20 +118,20 @@ const Sidebar = () => {
                                 onClick={() => setIsMobileOpen(false)}
                                 className={`
                                     flex items-center gap-3 px-4 py-3.5 rounded-2xl transition-all duration-200 group
-                                    ${active 
-                                        ? 'bg-zinc-50 text-zinc-900 ring-1 ring-zinc-100 shadow-sm' 
+                                    ${active
+                                        ? 'bg-stone-900 text-[#D4AF37] ring-1 ring-zinc-100 shadow-sm'
                                         : 'text-zinc-500 hover:bg-zinc-50/50 hover:text-zinc-900'}
                                 `}
                             >
-                                <div className={`transition-colors ${active ? 'text-[#D4AF37]' : 'group-hover:text-[#D4AF37]'}`}>
+                                <div className={`transition-colors ${active ? 'text-stone-300' : 'group-hover:text-[#D4AF37]'}`}>
                                     <Icon size={20} strokeWidth={active ? 2.5 : 2} />
                                 </div>
-                                <span className={`text-sm ${active ? 'font-black' : 'font-bold'}`}>
+                                <span className={`text-sm ${active ? 'text-stone-300' : 'font-bold'}`}>
                                     {item.label}
                                 </span>
                                 {active && (
                                     <div className="mr-auto">
-                                        <div className="w-1.5 h-1.5 rounded-full bg-[#D4AF37] shadow-[0_0_8px_#D4AF37]" />
+                                        <div className="w-1.5 h-1.5 rounded-full bg-stone-300 shadow-[0_0_8px_#D4AF37]" />
                                     </div>
                                 )}
                             </Link>

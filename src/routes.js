@@ -1,10 +1,16 @@
 import { lazy } from 'react'
-import MainLayout from './layout/MainLayout' // تأكد من المسار الصحيح
+import MainLayout from './layout/MainLayout'
 
 const SignIn = lazy(() => import('./features/auth/components/SignIn'));
-const Products = lazy(() => import('./pages/Products')); // مثال
+const Products = lazy(() => import('./features/products/pages/ProductsPage'));
+const RestockPage = lazy(() => import('./features/inventory/pages/RestockPage'));
+const POSPage = lazy(() => import('./features/sales/pages/POSPage'));
 const finance = lazy(() => import('./pages/Finance'));
 const orderpage = lazy(() => import('./pages/Sellspoint'));
+const sells = lazy(() => import('./pages/Sells'));
+const Expense = lazy(() => import('./pages/Expense'));
+
+
 
 // مثال
 
@@ -28,6 +34,14 @@ export const routes = [
                 path: 'products', 
                 element: Products,
             },
+            {
+                path: 'restock', 
+                element: RestockPage,
+            },
+            {
+                path: 'pos', 
+                element: POSPage,
+            },
 
 
 
@@ -40,6 +54,18 @@ export const routes = [
                 path: 'Sellspoint', 
                 element: orderpage,
             },
+            {
+                path: 'sells', 
+                element: sells,
+            },
+              {
+                path: 'sells', 
+                element: sells,
+            },
+              {
+                path: 'expense', 
+                element: Expense,
+            }
 
 
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useGetProducts } from '../hooks/UseGetProducts';
 import { useMutationProduct } from '../hooks/UseMutationProduct';
-import ProductsTable from '../components/ProductsTable';
+import {ProductsTable} from '../components/ProductsTable';
 import { Plus } from 'lucide-react';
 import Swal from 'sweetalert2';
 

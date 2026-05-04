@@ -1,5 +1,5 @@
 import React, { useState, useRef, useMemo, useEffect, useCallback } from 'react'
-import { ShoppingCart, Barcode, X, Plus, Minus, CheckCircle, Tag,  } from 'lucide-react'
+import { ShoppingCart, Barcode, X, Plus, Minus, CheckCircle, Tag, } from 'lucide-react'
 import { useNotifications } from '../../../shared/context/NotificationContext'
 
 const POSPage = () => {
@@ -106,11 +106,10 @@ const POSPage = () => {
                                         setSelectedCategory(cat);
                                         setSelectedSubFilter("الكل");
                                     }}
-                                    className={`px-6 py-3 rounded-xl text-xs font-black transition-all duration-300 whitespace-nowrap ${
-                                        selectedCategory === cat
+                                    className={`px-6 py-3 rounded-xl text-xs font-black transition-all duration-300 whitespace-nowrap ${selectedCategory === cat
                                             ? 'bg-gradient-to-r from-zinc-900 to-zinc-800 text-[#D4AF37] shadow-lg shadow-zinc-900/50 scale-105'
                                             : 'bg-zinc-50 text-zinc-600 border border-zinc-200 hover:bg-zinc-100 hover:text-zinc-900'
-                                    }`}
+                                        }`}
                                 >
                                     {cat}
                                 </button>
@@ -119,17 +118,16 @@ const POSPage = () => {
 
                         {subFilters.length > 0 && (
                             <div className="flex items-center gap-3  p-3 rounded-xl  animate-in fade-in slide-in-from-top-2 duration-300">
-                               
+
                                 <div className="flex gap-2 flex-wrap">
                                     {subFilters.map((type) => (
                                         <button
                                             key={type}
                                             onClick={() => setSelectedSubFilter(type)}
-                                            className={`px-5 py-2 rounded-lg text-xs font-black transition-all duration-300 ${
-                                                selectedSubFilter === type
+                                            className={`px-5 py-2 rounded-lg text-xs font-black transition-all duration-300 ${selectedSubFilter === type
                                                     ? 'bg-[#D4AF37] text-zinc-900 shadow-lg shadow-[#D4AF37]/30 scale-105'
                                                     : 'bg-zinc-800 text-zinc-300 hover:text-white hover:bg-zinc-700'
-                                            }`}
+                                                }`}
                                         >
                                             {type}
                                         </button>
@@ -171,7 +169,7 @@ const POSPage = () => {
                 </div>
 
                 {/* 2. الجانب الأيسر: السلة */}
-                <div className="w-[300px] bg-white border-r border-zinc-100 shadow-2xl flex flex-col">
+                <div className="w-[400px]  bg-white border-r border-zinc-100 shadow-2xl flex flex-col">
                     <div className="p-8 border-b border-zinc-50 bg-zinc-900 text-white rounded-bl-[3rem]">
                         <div className="flex justify-between items-center mb-6">
                             <h2 className="text-xl font-black flex items-center gap-2">
@@ -203,8 +201,19 @@ const POSPage = () => {
                         ))}
                     </div>
 
-                    <div className="p-6 bg-white border-t border-zinc-50">
-                        <button className="w-full bg-[#D4AF37] hover:bg-zinc-900 hover:text-[#D4AF37] text-zinc-900 py-6 rounded-2xl font-black text-sm flex items-center justify-center gap-3 transition-all shadow-xl shadow-[#D4AF37]/20 active:scale-95 group">
+                    <div className="w-full flex gap-3 flex-row items-center justify-center ">
+                        <button className="w-36 bg-zinc-900 hover:text-[#D4AF37] text-white py-3 rounded-2xl font-black text-sm flex items-center justify-center gap-3 transition-all shadow-xl shadow-[#D4AF37]/20 active:scale-95 group">
+                            <Tag size={20} className="group-hover:scale-110 transition-transform" />
+                            إضافة خصم
+                        </button>
+                        <button className="w-36 bg-zinc-900 hover:text-[#D4AF37] text-white py-3 rounded-2xl font-black text-sm flex items-center justify-center gap-3 transition-all shadow-xl shadow-[#D4AF37]/20 active:scale-95 group">
+                            <Tag size={20} className="group-hover:scale-110 transition-transform" />
+                           حالة الطلب
+                        </button>
+                    </div>
+
+                    <div className="p-3 bg-white border-t border-zinc-50">
+                        <button className="w-full bg-[#D4AF37] hover:bg-zinc-900 hover:text-[#D4AF37] text-zinc-900 py-3 rounded-2xl font-black text-sm flex items-center justify-center gap-3 transition-all shadow-xl shadow-[#D4AF37]/20 active:scale-95 group">
                             <CheckCircle size={20} className="group-hover:scale-110 transition-transform" />
                             إتمام ودفع الفاتورة
                         </button>

@@ -70,7 +70,7 @@ export const useMutationProduct = () => {
   })
 
   return {
-    addMutation,
+   mutate :  addMutation.mutate,
     updateMutation,
     deleteMutation,
   }

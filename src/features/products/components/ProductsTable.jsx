@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
 import { ProductRow } from "./ProductRow";
-import { LoadingState } from "../../../ui-ux/LoadingState";
-import EmptyState from "../../../ui-ux/EmptyState";
-import { TableFilters } from "../../../ui-ux/TableFilters";
+import { LoadingState } from "../../../ui/LoadingState";
+import EmptyState from "../../../ui/EmptyState";
+import { TableFilters } from "../../../ui/TableFilters";
 
 export const ProductsTable = ({ products, isLoading, onEdit, onDelete, onAdd }) => {
   const [typedProducts, setTypedProducts] = useState("الكل");
@@ -61,7 +61,6 @@ export const ProductsTable = ({ products, isLoading, onEdit, onDelete, onAdd }) 
                   key={product.id} 
                   product={product} 
                   activeType={typedProducts}
-                  onEdit={onEdit}
                   onDelete={onDelete}
                 />
               ))}

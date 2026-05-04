@@ -1,7 +1,6 @@
 import { Edit2, Trash2, Barcode } from 'lucide-react';
 
 export const ProductRow = ({ product, activeType, onEdit, onDelete }) => {
-  if (product.parent_id === null) return null;
 
   const lowStock = product.quantity < 5 && product.quantity !== null;
 
@@ -65,7 +64,7 @@ export const ProductRow = ({ product, activeType, onEdit, onDelete }) => {
       {/* الإجراءات */}
       <td className="px-4 py-4">
         <div className="flex justify-center gap-1.5">
-          <button onClick={() => onEdit(product.documentId)} className="p-2 rounded-xl bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition-all shadow-sm">
+          <button  className="p-2 rounded-xl bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition-all shadow-sm">
             <Edit2 size={14} />
           </button>
           <button onClick={() => onDelete(product.documentId)} className="p-2 rounded-xl bg-red-50 text-red-600 hover:bg-red-600 hover:text-white transition-all shadow-sm">

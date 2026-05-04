@@ -6,7 +6,7 @@ import {
     Wallet,
     ShoppingCart,
     AlertTriangle,
-    Zap,
+  
 } from 'lucide-react'
 import { Link, useLocation } from 'react-router-dom'
 import { useLogout } from '../features/auth'
@@ -68,7 +68,7 @@ const Sidebar = () => {
             {/* زر الهامبرجر - يظهر فقط في الموبايل */}
             <button
                 onClick={() => setIsMobileOpen(true)}
-                className="fixed top-4 right-4 z-50 p-2 bg-white border border-zinc-200 rounded-xl shadow-sm lg:hidden text-zinc-600"
+                className={`fixed ${isMobileOpen ? 'hidden' : 'top-4 right-4'} z-50 p-2 bg-white border border-zinc-200 rounded-xl shadow-sm lg:hidden text-zinc-600`}
             >
                 <Menu size={24} />
             </button>
@@ -83,7 +83,7 @@ const Sidebar = () => {
                 dir="rtl"
                 className={`
                     fixed top-0 right-0 z-40 h-screen transition-transform duration-300 ease-in-out
-                    bg-white border-l border-zinc-100  shadow-lg
+                    bg-stone-950 border-l border-zinc-100  shadow-lg
                     ${isMobileOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'}
                     w-72 lg:w-64 xl:w-72 flex flex-col
                 `}
@@ -95,7 +95,7 @@ const Sidebar = () => {
                             <Droplets className="text-[#D4AF37]" size={22} />
                         </div>
                         <div className="flex flex-col">
-                            <span className="font-black text-zinc-900 text-sm tracking-tight">ادارة الزيوت</span>
+                            <span className="font-black  text-sm tracking-tight">ادارة الزيوت</span>
                             <span className="text-[10px] text-[#D4AF37] font-bold uppercase tracking-wider">Oil Management</span>
                         </div>
                     </div>
@@ -120,18 +120,18 @@ const Sidebar = () => {
                                     flex items-center gap-3 px-4 py-3.5 rounded-2xl transition-all duration-200 group
                                     ${active
                                         ? 'bg-stone-900 text-[#D4AF37] ring-1 ring-zinc-100 shadow-sm'
-                                        : 'text-zinc-500 hover:bg-zinc-50/50 hover:text-zinc-900'}
+                                        : ' hover:bg-zinc-50/50 hover:text-zinc-900'}
                                 `}
                             >
-                                <div className={`transition-colors ${active ? 'text-stone-300' : 'group-hover:text-[#D4AF37]'}`}>
+                                <div className={`transition-colors ${active ? 'text-[#D4AF37]' : 'group-hover:text-[#D4AF37]'}`}>
                                     <Icon size={20} strokeWidth={active ? 2.5 : 2} />
                                 </div>
-                                <span className={`text-sm ${active ? 'text-stone-300' : 'font-bold'}`}>
+                                <span className={`text-sm ${active ? 'text-[#D4AF37]' : 'font-bold'}`}>
                                     {item.label}
                                 </span>
                                 {active && (
                                     <div className="mr-auto">
-                                        <div className="w-1.5 h-1.5 rounded-full bg-stone-300 shadow-[0_0_8px_#D4AF37]" />
+                                        <div className="w-1.5 h-1.5 rounded-full bg-[#D4AF37] shadow-[0_0_8px_#D4AF37]" />
                                     </div>
                                 )}
                             </Link>

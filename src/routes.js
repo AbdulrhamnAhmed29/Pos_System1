@@ -3,12 +3,14 @@ import MainLayout from './layout/MainLayout'
 
 const SignIn = lazy(() => import('./features/auth/components/SignIn'));
 const Products = lazy(() => import('./features/products/pages/ProductsPage'));
+const AddProducts = lazy(() => import('./features/products/pages/AddProducts'));
+
 const RestockPage = lazy(() => import('./features/inventory/pages/RestockPage'));
 const POSPage = lazy(() => import('./features/sales/pages/POSPage'));
-const finance = lazy(() => import('./pages/Finance'));
-const orderpage = lazy(() => import('./pages/Sellspoint'));
-const sells = lazy(() => import('./pages/Sells'));
-const Expense = lazy(() => import('./pages/Expense'));
+const NotFoundPage = lazy(() => import('./ui/NotFoundPage'));
+
+
+
 
 
 
@@ -31,41 +33,31 @@ export const routes = [
                 element: () => <div>إحصائيات المحل</div>,
             },
             {
-                path: 'products', 
+                path: 'products',
                 element: Products,
             },
             {
-                path: 'restock', 
+                path: 'add-products',
+                element: AddProducts,
+            },
+            {
+                path: 'restock',
                 element: RestockPage,
             },
             {
-                path: 'pos', 
+                path: 'pos',
+                element: POSPage,
+            },
+            {
+                path: 'pos',
                 element: POSPage,
             },
 
 
 
-            {
-                path: 'finance', 
-                element: finance,
-            },
-            
-            {
-                path: 'Sellspoint', 
-                element: orderpage,
-            },
-            {
-                path: 'sells', 
-                element: sells,
-            },
-              {
-                path: 'sells', 
-                element: sells,
-            },
-              {
-                path: 'expense', 
-                element: Expense,
-            }
+
+
+
 
 
 
@@ -76,6 +68,6 @@ export const routes = [
     },
     {
         path: '*',
-        redirect: '/login'
+        element: NotFoundPage
     }
 ]

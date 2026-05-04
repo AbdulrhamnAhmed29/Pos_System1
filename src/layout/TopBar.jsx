@@ -32,6 +32,8 @@ const TopBar = () => {
         '/restock': 'المنتجات الناقصة',
         '/sells': 'إدارة المبيعات',
         '/expense': 'إدارة المصاريف',
+        '/add-products': 'إضافة منتج',
+
     };
 
     return (
@@ -41,7 +43,7 @@ const TopBar = () => {
                        bg-white border-b border-zinc-100 transition-all duration-300 shadow-sm"
         >
             {/* جهة اليمين - العنوان الذكي */}
-            <div className="flex ps-10 items-center gap-4">
+            <div className="flex ps-9 items-center gap-4">
                 <div className="flex flex-col text-right border-r-4 border-[#D4AF37] pr-4 py-1">
                     <h1 className="text-lg font-black text-zinc-900 tracking-tight leading-none">
                         {pageTitles[location.pathname] || 'الرئيسية'}
@@ -55,15 +57,14 @@ const TopBar = () => {
             {/* جهة اليسار - الأكشنز */}
             <div className="flex items-center gap-5">
                 <div className="flex items-center gap-3 relative" ref={notifRef}>
-                    
+
                     {/* زر التنبيهات */}
-                    <button 
+                    <button
                         onClick={() => setIsNotifOpen(!isNotifOpen)}
-                        className={`relative p-3 rounded-2xl transition-all duration-300 ${
-                            isNotifOpen 
-                            ? 'bg-zinc-900 text-white shadow-xl shadow-zinc-200 scale-95' 
-                            : 'bg-zinc-50 text-zinc-500 hover:bg-zinc-100 border border-zinc-100'
-                        }`}
+                        className={`relative p-3 rounded-2xl transition-all duration-300 ${isNotifOpen
+                                ? 'bg-zinc-900 text-white shadow-xl shadow-zinc-200 scale-95'
+                                : 'bg-zinc-50 text-zinc-500 hover:bg-zinc-100 border border-zinc-100'
+                            }`}
                     >
                         <Bell size={20} className={isNotifOpen ? 'animate-none' : 'hover:rotate-12 transition-transform'} />
                         {lowStockCount > 0 && (
@@ -76,7 +77,7 @@ const TopBar = () => {
                     {/* قائمة الإشعارات (Ultra-White Premium) */}
                     {isNotifOpen && (
                         <div className="absolute top-16 left-0 w-[350px] bg-white border border-zinc-100 shadow-[0_20px_60px_rgba(0,0,0,0.1)] rounded-[2.5rem] overflow-hidden animate-in fade-in zoom-in duration-200 z-50">
-                            
+
                             {/* Header */}
                             <div className="p-6 border-b border-zinc-50 flex items-center justify-between">
                                 <div className="flex items-center gap-2">
@@ -87,7 +88,7 @@ const TopBar = () => {
                                     {lowStockCount} منتجات منخفضة
                                 </span>
                             </div>
-                            
+
                             {/* Scrollable Content */}
                             <div className="max-h-[380px] overflow-y-auto custom-scrollbar">
                                 {lowStockProducts && lowStockProducts.length > 0 ? (
@@ -127,7 +128,7 @@ const TopBar = () => {
                                     </div>
                                 )}
                             </div>
-                            
+
                             {/* Footer */}
                             <Link to={'/restock'} className="block p-4 bg-zinc-50/50 border-t border-zinc-50">
                                 <button className="w-full flex items-center justify-center gap-2 bg-zinc-900 text-white py-3.5 rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] hover:bg-black transition-all active:scale-[0.98]">

@@ -1,10 +1,9 @@
 import { lazy } from 'react'
 import MainLayout from './layout/MainLayout'
-
 const SignIn = lazy(() => import('./features/auth/components/SignIn'));
 const Products = lazy(() => import('./features/products/pages/ProductsPage'));
 const AddProducts = lazy(() => import('./features/products/pages/AddProducts'));
-
+const updateProducts = lazy(() => import('./features/products/pages/UpdateProduct'));
 const RestockPage = lazy(() => import('./features/inventory/pages/RestockPage'));
 const POSPage = lazy(() => import('./features/sales/pages/POSPage'));
 const NotFoundPage = lazy(() => import('./ui/NotFoundPage'));
@@ -48,9 +47,10 @@ export const routes = [
                 path: 'pos',
                 element: POSPage,
             },
+          
             {
-                path: 'pos',
-                element: POSPage,
+                path: 'update-product/:id',
+                element: updateProducts,
             },
 
 

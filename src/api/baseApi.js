@@ -13,7 +13,7 @@ const BaseApi = {
   },
 
   create: async (resource, payload) => {
-    const { data } = await api.post(resource, payload)
+    const { data } = await api.post(resource, payload); 
     return data
   },
 

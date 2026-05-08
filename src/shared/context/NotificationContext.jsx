@@ -7,9 +7,18 @@ export const NotificationProvider = ({ children }) => {
   const { data: products } = useGetProducts()
 
   const lowStockProducts = useMemo(() => {
-    if (!products || products.length === 0) return []
-    return products.filter(product => product.quantity < 5 && product.parent_id !== null  && product.bulk_quantity < 10 && product.category?.name !== "خدمة" &&product.category?.name !== "غسيل"  )
-  }, [products])
+    if (!products || products.length === 0) return [];
+
+    return products.filter(product => {
+      const isLowBulk = (product.parent_id === null && product.bulk_quantity > 0 && product.bulk_quantity < 30);
+      const isLowQuantity = (product.quantity !== null && product.quantity > 0 && product.quantity < 20);
+      return isLowBulk || isLowQuantity;
+    });
+  }, [products]); 
+
+
+
+
 
   const value = {
     lowStockProducts,

@@ -1,113 +1,79 @@
-import { useState, useEffect, useRef } from 'react'
-import {
-    Menu, LogOut, LayoutDashboard,
-    Droplets,  X,
-    Box,
-    Wallet,
-    ShoppingCart,
-    AlertTriangle,
-  
+import { useState } from 'react'
+import { 
+    Menu, LogOut, LayoutDashboard, Droplets, X, 
+    Box, Wallet, ShoppingCart, AlertTriangle, 
+    ChevronRight, ChevronLeft 
 } from 'lucide-react'
 import { Link, useLocation } from 'react-router-dom'
-import { useLogout } from '../features/auth'
+import { useLogout } from '../features/auth' // تأكد من المسار حسب مشروعك
 
-const Sidebar = () => {
+const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
     const [isMobileOpen, setIsMobileOpen] = useState(false)
-    const sidebarRef = useRef(null)
     const logout = useLogout()
     const location = useLocation()
+    const isActive = (path) => location.pathname === path
 
     const menuItems = [
-        {
-            path: '/pos',
-            label: 'نقطة البيع',
-            icon: ShoppingCart
-        },
-        {
-            path: '/dashboard',
-            label: 'الاحصائيات',
-            icon: LayoutDashboard
-        },
-        {
-            path: '/products',
-            label: 'إدارة المنتجات',
-            icon: Box
-        },
-        {
-            path: '/restock',
-            label: 'المنتجات الناقصة',
-            icon: AlertTriangle
-        },
-        {
-            path: '/sells',
-            label: 'ادارة المبيعات',
-            icon: Wallet,
-        },
-        {
-            path: '/expense',
-            label: 'ادارة المصاريف',
-            icon: Wallet
-        },
+        { path: '/pos', label: 'ابداء البيع', icon: ShoppingCart },
+        { path: '/dashboard', label: 'الإحصائيات', icon: LayoutDashboard },
+        { path: '/products', label: 'المخزون', icon: Box },
+        { path: '/restock', label: 'المنتجات الناقصة', icon: AlertTriangle },
+        { path: '/sells', label: 'المبيعات', icon: Wallet },
+        { path: '/expense', label: 'المصاريف', icon: Wallet },
     ];
-
-    // إغلاق القائمة عند الضغط خارجها (للموبايل فقط)
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (isMobileOpen && sidebarRef.current && !sidebarRef.current.contains(event.target)) {
-                setIsMobileOpen(false)
-            }
-        }
-        document.addEventListener('mousedown', handleClickOutside)
-        return () => document.removeEventListener('mousedown', handleClickOutside)
-    }, [isMobileOpen])
-
-    const isActive = (path) => location.pathname === path
 
     return (
         <>
-            {/* زر الهامبرجر - يظهر فقط في الموبايل */}
             <button
                 onClick={() => setIsMobileOpen(true)}
-                className={`fixed ${isMobileOpen ? 'hidden' : 'top-4 right-4'} z-50 p-2 bg-white border border-zinc-200 rounded-xl shadow-sm lg:hidden text-zinc-600`}
+                className="fixed top-4 right-4 z-50 p-2.5 bg-white border border-zinc-200 rounded-xl shadow-lg lg:hidden text-zinc-600 active:scale-90 transition-transform"
             >
                 <Menu size={24} />
             </button>
 
-            {/* Overlay للموبايل */}
             {isMobileOpen && (
-                <div className="fixed inset-0 bg-zinc-900/20 backdrop-blur-sm z-40 lg:hidden transition-opacity" />
+                <div 
+                    className="fixed inset-0 bg-zinc-900/40 backdrop-blur-sm z-40 lg:hidden transition-opacity"
+                    onClick={() => setIsMobileOpen(false)}
+                />
             )}
 
             <aside
-                ref={sidebarRef}
                 dir="rtl"
                 className={`
-                    fixed top-0 right-0 z-40 h-screen transition-transform duration-300 ease-in-out
-                    bg-stone-950 border-l border-zinc-100  shadow-lg
-                    ${isMobileOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'}
-                    w-72 lg:w-64 xl:w-72 flex flex-col
+                    fixed top-0 right-0 z-50 h-screen transition-all duration-500 ease-in-out
+                    bg-stone-950 border-l border-white/5 shadow-2xl flex flex-col
+                    ${isMobileOpen ? 'translate-x-0 w-72' : 'translate-x-full lg:translate-x-0'}
+                    ${isCollapsed ? 'lg:w-20' : 'lg:w-64 xl:w-72'}
                 `}
             >
-                {/* Header: اسم السيستم واللوجو */}
-                <div className="p-6 h-20 border-b border-zinc-50 flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-zinc-900 flex items-center justify-center shadow-lg shadow-zinc-200">
-                            <Droplets className="text-[#D4AF37]" size={22} />
+                <div className="p-4 h-20 border-b border-white/5 flex items-center justify-between overflow-hidden">
+                    <div className="flex items-center gap-3 min-w-max">
+                        <div className="w-10 h-10 rounded-xl bg-[#D4AF37] flex items-center justify-center shadow-lg shadow-[#D4AF37]/20 shrink-0">
+                            <Droplets className="text-stone-950" size={22} />
                         </div>
-                        <div className="flex flex-col">
-                            <span className="font-black  text-sm tracking-tight">ادارة الزيوت</span>
-                            <span className="text-[10px] text-[#D4AF37] font-bold uppercase tracking-wider">Oil Management</span>
-                        </div>
+                        {!isCollapsed && (
+                            <div className="flex flex-col animate-in fade-in slide-in-from-right-2 duration-500">
+                                <span className="font-black text-white text-sm tracking-tight">ادارة الزيوت</span>
+                                <span className="text-[9px] text-[#D4AF37] font-bold uppercase tracking-[0.2em]">Oil Management</span>
+                            </div>
+                        )}
                     </div>
 
-                    {/* زر إغلاق الموبايل */}
-                    <button onClick={() => setIsMobileOpen(false)} className="lg:hidden p-1 text-zinc-400">
+                    <button onClick={() => setIsMobileOpen(false)} className="lg:hidden p-1 text-zinc-400 hover:text-white">
                         <X size={20} />
                     </button>
                 </div>
 
-                {/* Navigation Links */}
-                <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto custom-scrollbar">
+                <button 
+                    onClick={() => setIsCollapsed(!isCollapsed)}
+                    className="hidden lg:flex absolute -left-3 top-24 w-6 h-6 bg-[#D4AF37] rounded-full items-center justify-center text-stone-950 shadow-xl hover:scale-110 transition-all z-50"
+                >
+                    {isCollapsed ? <ChevronLeft size={14} /> : <ChevronRight size={14} />}
+                </button>
+
+                {/* القائمة */}
+                <nav className="flex-1 px-3 py-6 space-y-2 overflow-y-auto custom-scrollbar ">
                     {menuItems.map((item) => {
                         const Icon = item.icon
                         const active = isActive(item.path)
@@ -116,46 +82,45 @@ const Sidebar = () => {
                                 key={item.path}
                                 to={item.path}
                                 onClick={() => setIsMobileOpen(false)}
+                                title={isCollapsed ? item.label : ""}
                                 className={`
-                                    flex items-center gap-3 px-4 py-3.5 rounded-2xl transition-all duration-200 group
+                                    flex items-center gap-4 px-3 py-3.5 rounded-2xl transition-all duration-300 group relative
                                     ${active
-                                        ? 'bg-stone-900 text-[#D4AF37] ring-1 ring-zinc-100 shadow-sm'
-                                        : ' hover:bg-zinc-50/50 hover:text-zinc-900'}
+                                        ? 'bg-[#D4AF37] text-stone-950 shadow-lg shadow-[#D4AF37]/10'
+                                        : 'text-zinc-400 hover:bg-white/5 hover:text-white'}
                                 `}
                             >
-                                <div className={`transition-colors ${active ? 'text-[#D4AF37]' : 'group-hover:text-[#D4AF37]'}`}>
-                                    <Icon size={20} strokeWidth={active ? 2.5 : 2} />
-                                </div>
-                                <span className={`text-sm ${active ? 'text-[#D4AF37]' : 'font-bold'}`}>
-                                    {item.label}
-                                </span>
-                                {active && (
-                                    <div className="mr-auto">
-                                        <div className="w-1.5 h-1.5 rounded-full bg-[#D4AF37] shadow-[0_0_8px_#D4AF37]" />
-                                    </div>
+                                <Icon size={22} strokeWidth={active ? 2.5 : 2} className="shrink-0 transition-transform group-hover:scale-110" />
+                                
+                                {!isCollapsed && (
+                                    <span className="text-sm font-bold whitespace-nowrap animate-in fade-in duration-300">
+                                        {item.label}
+                                    </span>
+                                )}
+
+                                {active && isCollapsed && (
+                                    <div className="absolute right-0 w-1 h-6 bg-[#D4AF37] rounded-l-full shadow-[0_0_8px_#D4AF37]" />
                                 )}
                             </Link>
                         )
                     })}
                 </nav>
 
-                {/* User / Logout Section */}
-                <div className="p-4 border-t border-zinc-50">
+                {/* تسجيل الخروج */}
+                <div className="p-4 border-t border-white/5">
                     <button
                         onClick={logout}
-                        className="w-full flex items-center gap-3 px-4 py-4 rounded-2xl text-red-500 font-bold text-sm
-                        hover:bg-red-50 transition-all group"
+                        className={`
+                            w-full flex items-center gap-4 px-3 py-4 rounded-2xl text-red-400 font-bold text-sm
+                            hover:bg-red-500/10 transition-all group overflow-hidden
+                            ${isCollapsed ? 'justify-center' : ''}
+                        `}
                     >
-                        <LogOut size={20} strokeWidth={2.5} className="group-hover:-translate-x-1 transition-transform" />
-                        <span>تسجيل الخروج</span>
+                        <LogOut size={20} className="shrink-0 transition-transform group-hover:-translate-x-1" />
+                        {!isCollapsed && <span className="whitespace-nowrap">تسجيل الخروج</span>}
                     </button>
                 </div>
             </aside>
-
-            {/* حاوية المحتوى الرئيسي - هذا الجزء مهم ليظهر بجانب السايد بار في الشاشات الكبيرة */}
-            <div className="lg:pr-64 xl:pr-72 transition-all duration-300">
-                {/* هنا يوضع الـ <Outlet /> أو محتوى الصفحة */}
-            </div>
         </>
     )
 }

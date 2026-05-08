@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { routes } from './routes'
 import { NotificationProvider } from './shared/context/NotificationContext'
+import { AuthGuard } from './ui/AuthGuard'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -30,19 +31,45 @@ function App() {
 
                 if (route.children) {
                   return (
-                    <Route key={index} path={route.path} element={<route.element />}>
+                    <Route
+                      key={index}
+                      path={route.path}
+                      // حماية الأب (Layout)
+                      element={
+                        <AuthGuard isPublic={route.isPublic}>
+                          <route.element />
+                        </AuthGuard>
+                      }
+                    >
                       {route.children.map((child, childIndex) => (
-                        <Route 
-                          key={childIndex} 
-                          path={child.path} 
-                          element={<child.element />} 
+                        <Route
+                          key={childIndex}
+                          path={child.path}
+                          // الأبناء غالباً بيورثوا حالة الحماية من الأب، 
+                          // بس للأمان لو في ابن ليه حالة خاصة:
+                          element={
+                            <AuthGuard isPublic={child.isPublic ?? route.isPublic}>
+                              <child.element />
+                            </AuthGuard>
+                          }
                         />
                       ))}
                     </Route>
                   )
                 }
 
-                return <Route key={index} path={route.path} element={<route.element />} />
+                // الروتس العادية (زي اللوجين أو الـ 404)
+                return (
+                  <Route
+                    key={index}
+                    path={route.path}
+                    element={
+                      <AuthGuard isPublic={route.isPublic}>
+                        <route.element />
+                      </AuthGuard>
+                    }
+                  />
+                )
               })}
             </Routes>
           </Suspense>

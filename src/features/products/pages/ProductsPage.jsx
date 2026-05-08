@@ -2,18 +2,19 @@ import React from 'react';
 import { useGetProducts } from '../hooks/UseGetProducts';
 import { useMutationProduct } from '../hooks/UseMutationProduct';
 import { ProductsTable } from '../components/ProductsTable';
-import {  Plus } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import Swal from 'sweetalert2';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const ProductsPage = () => {
   const { data: products, isLoading } = useGetProducts();
   const { deleteMutation } = useMutationProduct();
 
+
   const productsList = products || [];
 
   const navigate = useNavigate();
-  const navigation = ()=>{
+  const navigation = () => {
     navigate('/add-products')
   }
 
@@ -62,10 +63,15 @@ const ProductsPage = () => {
           <p className="text-zinc-500 font-bold text-sm mr-5 opacity-70 italic">نظام سِجل لإدارة الزيوت وقطع الغيار</p>
         </div>
 
-      <button onClick={navigation} className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-[#D4AF37] text-zinc-900 font-bold transition-all duration-300 shadow-lg shadow-[#D4AF37]/20 hover:bg-[#D4AF37]/90">
-          <Plus size={20} className="relative z-10 text-[#D4AF37] group-hover:text-zinc-900 transition-colors" />
-          <span className="relative z-10 transition-colors group-hover:text-zinc-900">إضافة  منتج</span>
-      </button>
+        <button>
+          <Link
+            to={"/add-products"}
+            className="bg-zinc-900 w-44 text-white px-10 py-4 rounded-2xl font-black text-sm hover:bg-[#D4AF37] hover:text-zinc-900 transition-all flex items-center gap-3 mx-auto shadow-2xl hover:scale-105 active:scale-95"
+          >
+            <Plus size={20} />
+            إضافة  منتج 
+          </Link>
+        </button>
       </div>
 
 
@@ -76,7 +82,6 @@ const ProductsPage = () => {
             products={productsList}
             isLoading={isLoading}
             onDelete={handleDelete}
-
           />
         </div>
       </div>

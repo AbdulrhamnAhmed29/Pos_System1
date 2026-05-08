@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box, Plus } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const EmptyState = ({ onAdd }) => {
   return (
@@ -18,13 +19,13 @@ const EmptyState = ({ onAdd }) => {
       </p>
 
       {/* زر الإضافة */}
-      <button
-        onClick={onAdd}
-        className="bg-zinc-900 text-white px-10 py-4 rounded-2xl font-black text-sm hover:bg-[#D4AF37] hover:text-zinc-900 transition-all flex items-center gap-3 mx-auto shadow-2xl hover:scale-105 active:scale-95"
+      <Link
+        to={"/add-products"}
+        className="bg-zinc-900 w-60 text-white px-10 py-4 rounded-2xl font-black text-sm hover:bg-[#D4AF37] hover:text-zinc-900 transition-all flex items-center gap-3 mx-auto shadow-2xl hover:scale-105 active:scale-95"
       >
         <Plus size={20} />
         إضافة أول منتج للمخزن
-      </button>
+      </Link>
     </div>
   );
 };

@@ -5,8 +5,46 @@ import Swal from 'sweetalert2'
 export const useMutationProduct = () => {
   const queryClient = useQueryClient()
 
+  //1- add product function 
+  // _______________________
   const addMutation = useMutation({
-    mutationFn: (payload) => productService.addProduct(payload),
+    mutationFn: async (payload) => {
+
+      const parentPayload = {
+        data: {
+          name: payload.name,
+          category: payload.category_id,
+          brand: payload.brand_id,
+          bulk_quantity: payload.bulk_quantity,
+        },
+      }
+        ;
+      const parentResponse = await productService.addProduct(parentPayload);
+      const parentId = parentResponse.documentId;
+      const productName = parentResponse.name;
+      console.log(productName, parentId);
+
+      const childrenPromises = await payload.variants.map((v) => {
+        const childPayload = {
+          data: {
+            name: `${productName}`,
+            attribute_sets: v.attributeSet,
+            attributes: v.attribute_id,
+            barcode: v.barcode,
+            parent_id: parentId,
+            cost_price: v.cost_price,
+            quantity: v.quantity,
+          }
+        }
+
+        return productService.addProduct(childPayload)
+      });
+
+      return Promise.all(childrenPromises)
+    },
+
+
+
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['products'] })
       Swal.fire({
@@ -15,39 +53,95 @@ export const useMutationProduct = () => {
         text: 'تم إضافة المنتج بنجاح',
         confirmButtonColor: '#D4AF37',
       })
-      
+
     },
     onError: (error) => {
       Swal.fire({
         icon: 'error',
         title: 'خطأ!',
-        text: error.response?.data?.message || 'حدث خطأ أثناء إضافة المنتج',
+        text: error.response?.data?.message,
         confirmButtonColor: '#D4AF37',
       })
     },
-  })
+  });
 
+
+  //2- update product function 
+  // ________________________
   const updateMutation = useMutation({
-    mutationFn: ({ id, payload }) => productService.updateProduct(id, payload),
+    mutationFn: async ({ id, payload }) => {
+
+      // 1- تحديث المنتج الأب
+      const parentUpdate = {
+        data: {
+          name: payload.name,
+          category: payload.category_id,
+          brand: payload.brand_id,
+          bulk_quantity: payload.bulk_quantity,
+        },
+      };
+
+      const parentResponse = await productService.updateProduct(id, parentUpdate);
+      console.log(parentResponse);
+      
+
+      // تأكد إن parentId مأخوذ من الـ id اللي جاي للهوك أصلاً أو الاستجابة
+      const parentId = id;
+      const productName = payload.name;
+
+      // 2- تحديث الأطفال (Variants)
+      const childrenPromise = payload.variants.map((v) => {
+
+        const childPayload = {
+          data: {
+            name: productName, // أو يفضل تدمج معاه الحجم لو متاح
+            attribute_sets: v.attributeSet,
+            attributes: v.attribute_id,
+            barcode: v.barcode,
+            parent_id: parentId, // الربط بالأب
+            cost_price: v.cost_price,
+            quantity: v.quantity,
+          }
+        };
+
+        if (v.documentId) {
+          console.log(v.documentId);
+          
+          console.log(" and update new ");
+
+          return productService.updateProduct(v.documentId, childPayload);
+        } else {
+          console.log("else and create new ");
+
+          return productService.addProduct(childPayload);
+        }
+      });
+
+      return await Promise.all(childrenPromise);
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['products'] })
+      queryClient.invalidateQueries({ queryKey: ['products'] });
       Swal.fire({
         icon: 'success',
         title: 'نجح!',
         text: 'تم تحديث المنتج بنجاح',
-        confirmButtonColor: '#D4AF37',
-      })
+        confirmButtonColor: '#D4AF37'
+      });
     },
     onError: (error) => {
+      console.log(error);
+
       Swal.fire({
         icon: 'error',
         title: 'خطأ!',
-        text: error.response?.data?.message || 'حدث خطأ أثناء تحديث المنتج',
+        text: error.response?.data?.message,
         confirmButtonColor: '#D4AF37',
-      })
+      });
     },
-  })
+  });
 
+  // 3- delete functiuon 
+  // ______________________
   const deleteMutation = useMutation({
     mutationFn: (id) => productService.deleteProduct(id),
     onSuccess: () => {
@@ -67,11 +161,11 @@ export const useMutationProduct = () => {
         confirmButtonColor: '#D4AF37',
       })
     },
-  })
+  });
 
   return {
-   mutate :  addMutation.mutate,
-    updateMutation,
+    mutate: addMutation.mutate,
+    update: updateMutation.mutate,
     deleteMutation,
   }
 }

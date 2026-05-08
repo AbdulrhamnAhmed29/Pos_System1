@@ -3,88 +3,176 @@ import { useForm, useFieldArray } from 'react-hook-form';
 
 export default function ProductForm({ categories, brands, Mutate, attributeSet, attribute }) {
 
-  // 1. إعداد الفورم (تأكد من مطابقة الأسماء هنا مع الـ register)
   const { register, control, handleSubmit, formState: { errors } } = useForm({
     defaultValues: {
       name: '',
       category_id: '',
       brand_id: '',
-      variants: [{ attribute_id: '', buying_price: 0, cost_price: 0, quantity: 0, barcode: '', attributeSet: '' }]
+      bulk_quantity: 0,
+      variants: [{ attribute_id: '', cost_price: '', quantity: '', barcode: '', attributeSet: '' }]
     }
   });
-  console.log(errors);
 
-  // 2. إدارة المصفوفة
-  const { fields } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control,
     name: "variants"
   });
 
   const onSubmit = (data) => {
-    // التحويل لمنتجات مستقلة
-    const finalProductsArray = data.variants.map((variant) => {
-      return {
-        name: `${data.name} - ${attribute.find(a => String(a.id) === String(variant.attribute_id))?.name || ''}`,
-        category: data.category_id, // نستخدم الاسم الصحيح من الـ register
-        brand: data.brand_id,     // نستخدم الاسم الصحيح من الـ register
-        attribute: variant.attribute_id,
-        buying_price: Number(variant.buying_price),
-        cost_price: Number(variant.cost_price),
-        quantity: Number(variant.quantity),
-        barcode: variant.barcode,
-        attributeSet: variant.attributeSet,
-      };
-    });
-
-    Mutate(finalProductsArray[0]);
+    console.log("Data is valid:", data);
+    return Mutate(data);
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-6 bg-white rounded-xl shadow-md">
+    <form onSubmit={handleSubmit(onSubmit)} className="max-w-5xl mx-auto p-8 bg-white rounded-2xl shadow-xl border border-gray-100 space-y-8" dir="rtl">
 
-      {/* القسم الأساسي - تأكد من الـ register هنا */}
-      <div className="grid grid-cols-3 gap-4 p-4 border-b">
-        <input {...register("name")} placeholder="اسم الصنف الأساسي" className="border p-2 text-black rounded" />
-
-        <select {...register("category_id")} className="border p-2 rounded text-black">
-          <option value="">اختر القسم</option>
-          {categories?.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-        </select>
-
-        <select {...register("brand_id")} className="border p-2 rounded text-black">
-          <option value="">اختر البراند</option>
-          {brands?.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
-        </select>
+      <div className="border-b pb-4">
+        <h2 className="text-2xl font-bold text-gray-800">إضافة منتج جديد</h2>
+        <p className="text-black text-sm">أدخل البيانات الأساسية والمتغيرات الخاصة بالمنتج</p>
       </div>
 
-      {/* قسم الأحجام - التصحيح الجوهري هنا */}
+      {/* القسم الأساسي */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="flex flex-col gap-2">
+          <label className="text-sm font-semibold text-stone-800 mr-1">اسم المنتج</label>
+          <input
+            {...register("name", { required: "اسم المنتج مطلوب" })}
+            placeholder="اسم الصنف الأساسي"
+            className={`w-full border p-2.5 rounded-lg focus:ring-2 outline-none transition-all ${errors.name ? 'border-red-500 ring-red-200' : 'border-gray-300 focus:ring-blue-500'}`}
+          />
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <label className="text-sm font-semibold text-stone-800 mr-1">القسم</label>
+          <select 
+            {...register("category_id", { required: true })} 
+            className={`w-full border p-2.5 rounded-lg bg-white outline-none ${errors.category_id ? 'border-red-500' : 'border-gray-300'}`}
+          >
+            <option value="">اختر القسم</option>
+            {categories?.map(c => <option key={c.id} value={c.documentId}>{c.name}</option>)}
+          </select>
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <label className="text-sm font-semibold text-stone-800 mr-1">البراند</label>
+          <select 
+            {...register("brand_id", { required: true })} 
+            className={`w-full border p-2.5 rounded-lg bg-white outline-none ${errors.brand_id ? 'border-red-500' : 'border-gray-300'}`}
+          >
+            <option value="">اختر البراند</option>
+            {brands?.map(b => <option key={b.id} value={b.documentId}>{b.name}</option>)}
+          </select>
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <label className="text-sm font-semibold text-stone-800 mr-1">كمية السايب (كجم)</label>
+          <input
+            type="number"
+            {...register("bulk_quantity", { required: true, min: 0 })}
+            placeholder="مثال: 50"
+            className={`w-full border p-2.5 rounded-lg outline-none ${errors.bulk_quantity ? 'border-red-500' : 'border-gray-300'}`}
+          />
+        </div>
+      </div>
+
+      {/* قسم المتغيرات */}
       <div className="space-y-4">
-        {fields.map((field, index) => (
-          <div key={field.id} className="grid grid-cols-5 gap-2 items-end p-4 bg-gray-50 rounded-lg">
+        <div className="flex justify-between items-center bg-gray-50 p-4 rounded-t-xl border-b">
+          <h3 className="font-bold text-stone-800">متغيرات المنتج (الأحجام والأنواع)</h3>
+          <button
+            type="button"
+            onClick={() => append({ attribute_id: '', cost_price: '0', quantity: '0', barcode: '', attributeSet: '' })}
+            className="text-sm bg-blue-50 text-blue-600 px-4 py-2 rounded-lg border border-blue-200 hover:bg-blue-600 hover:text-white transition-all flex items-center gap-2"
+          >
+            <span>+</span> إضافة متغير جديد
+          </button>
+        </div>
 
-            {/* لازم تستخدم index عشان الـ array يتبني صح */}
-            <select {...register(`variants.${index}.attribute_id`)} className="border p-2 rounded text-black">
-              <option value="">الحجم</option>
-              {attribute?.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
-            </select>
-            {/* لازم تستخدم index عشان الـ array يتبني صح */}
-            <select {...register(`variants.${index}.attributeSet`)} className="border p-2 rounded text-black">
-              <option value=""> نوع المنتج </option>
-              {attributeSet?.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
-            </select>
+        <div className="space-y-4">
+          {fields.map((field, index) => (
+            <div key={field.id} className="relative grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4 p-6 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+              
+              <div className="flex flex-col gap-1">
+                <label className="text-xs font-bold text-stone-900 mr-1">نوع المنتج</label>
+                <select 
+                  {...register(`variants.${index}.attributeSet`, { required: true })} 
+                  className={`border p-2 rounded-md text-sm outline-none ${errors.variants?.[index]?.attributeSet ? 'border-red-500' : 'border-gray-300'}`}
+                >
+                  <option value="">النوع</option>
+                  {attributeSet?.map(a => <option key={a.id} value={a.documentId}>{a.name}</option>)}
+                </select>
+              </div>
 
-            <input type="number" {...register(`variants.${index}.buying_price`)} placeholder="شراء" className="border p-2 rounded text-black" />
-            <input type="number" {...register(`variants.${index}.cost_price`)} placeholder="بيع" className="border p-2 rounded text-black" />
-            <input type="number" {...register(`variants.${index}.quantity`)} placeholder="كمية" className="border p-2 rounded text-black" />
-            <input type="text" {...register(`variants.${index}.barcode`)} placeholder="الباركود" className="border p-2 rounded text-black" />
+              <div className="flex flex-col gap-1">
+                <label className="text-xs font-bold text-stone-900 mr-1">الحجم</label>
+                <select 
+                  {...register(`variants.${index}.attribute_id`, { required: true })} 
+                  className={`border p-2 rounded-md text-sm outline-none ${errors.variants?.[index]?.attribute_id ? 'border-red-500' : 'border-gray-300'}`}
+                >
+                  <option value="">اختر الحجم</option>
+                  {attribute?.map(a => <option key={a.id} value={a.documentId}>{a.name}</option>)}
+                </select>
+              </div>
 
-          </div>
-        ))}
+              <div className="flex flex-col gap-1">
+                <label className="text-xs font-bold text-stone-900 mr-1">سعر البيع</label>
+                <input 
+                  type="number" 
+                  {...register(`variants.${index}.cost_price`, { required: true, min: 0 })} 
+                  placeholder="0.00" 
+                  className={`border p-2 rounded-md text-sm outline-none ${errors.variants?.[index]?.cost_price ? 'border-red-500' : 'border-gray-300'}`} 
+                />
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <label className="text-xs font-bold text-stone-900 mr-1">الكمية (قطعة)</label>
+                <input 
+                  type="number" 
+                  {...register(`variants.${index}.quantity`, { required: true, min: 0 })} 
+                  placeholder="0" 
+                  className={`border p-2 rounded-md text-sm outline-none ${errors.variants?.[index]?.quantity ? 'border-red-500' : 'border-gray-300'}`} 
+                />
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <label className="text-xs font-bold text-stone-900 mr-1">الباركود (اختياري)</label>
+                <input 
+                  type="text" 
+                  {...register(`variants.${index}.barcode`)} 
+                  placeholder="Barcode" 
+                  className="border border-gray-300 p-2 text-stone-800 rounded-md text-sm outline-none" 
+                />
+              </div>
+
+              <div className="flex items-end justify-center">
+                <button
+                  type="button"
+                  onClick={() => remove(index)}
+                  className="w-full bg-red-50 text-red-500 py-2 rounded-md hover:bg-red-500 hover:text-white transition-colors text-sm font-medium"
+                >
+                  حذف السطر
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
-      <div className="flex gap-4">
-        <button type="submit" className="bg-green-600 text-white px-8 py-2 rounded font-bold text-lg hover:bg-green-700 transition-colors">
-          حفظ الكل كمنتجات منفصلة
+      {/* رسالة الخطأ العامة */}
+      {Object.keys(errors).length > 0 && (
+        <div className="bg-red-50 border-r-4 border-red-500 p-4 rounded">
+          <p className="text-red-700 text-sm font-bold">
+            يرجى تعبئة جميع الحقول المطلوبة (اسم المنتج، القسم، البراند، والبيانات داخل كل متغير).
+          </p>
+        </div>
+      )}
+
+      <div className="pt-6 border-t flex justify-first">
+        <button
+          type="submit"
+          className="bg-stone-900 text-white px-10 py-3  rounded-xl font-bold text-lg hover:bg-stone-700 shadow-lg transition-all active:scale-95"
+        >
+          حفظ المنتج
         </button>
       </div>
 

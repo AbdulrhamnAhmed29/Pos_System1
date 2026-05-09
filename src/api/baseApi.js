@@ -18,7 +18,7 @@ const BaseApi = {
   },
 
   update: async (resource, id, payload) => {
-    const { data } = await api.put(`${resource}/${id}`, payload)
+    const { data } = await api.put(`${resource}/${id}`, payload);
     return data
   },
 

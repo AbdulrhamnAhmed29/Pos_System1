@@ -1,14 +1,14 @@
 import React from 'react';
 import { ArrowRight, Plus } from 'lucide-react';
 
-const ChildProductView = ({ 
-  selectedParent, 
-  setSelectedParent, 
-  childProducts, 
-  availableAttributes, 
-  selectedAttribute, 
-  setSelectedAttribute, 
-  addToCart 
+const ChildProductView = ({
+  selectedParent,
+  setSelectedParent,
+  childProducts,
+  availableAttributes,
+  selectedAttribute,
+  setSelectedAttribute,
+  addToCart
 }) => {
   return (
     <div className="animate-in fade-in slide-in-from-bottom-4 duration-300">
@@ -31,9 +31,8 @@ const ChildProductView = ({
             <button
               key={attr}
               onClick={() => setSelectedAttribute(attr)}
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-                selectedAttribute === attr ? 'bg-[#D4AF37] text-zinc-900' : 'hover:bg-white/10 text-white'
-              }`}
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${selectedAttribute === attr ? 'bg-[#D4AF37] text-zinc-900' : 'hover:bg-white/10 text-white'
+                }`}
             >
               {attr}
             </button>
@@ -59,6 +58,8 @@ const ChildProductView = ({
             </div>
             <div className="space-y-3">
               <h3 className="font-bold text-zinc-800 text-sm line-clamp-2 min-h-[2.5rem]">{child.name}</h3>
+              <h3 className="font-bold text-zinc-800 text-sm line-clamp-2 min-h-[2.5rem]">{child.attributes?.name}</h3>
+
               <div className="pt-2 flex items-baseline gap-1 border-t border-zinc-50">
                 <span className="text-2xl font-black text-zinc-900">{child.cost_price}</span>
                 <span className="text-[10px] font-bold text-zinc-400">ج.م</span>

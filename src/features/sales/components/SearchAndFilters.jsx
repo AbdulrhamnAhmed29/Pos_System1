@@ -12,6 +12,7 @@ const SearchAndFilters = ({
     selectedSubFilter,
     setSelectedSubFilter
 }) => {
+
     return (
         <div className="bg-white p-6 rounded-3xl shadow-sm border border-zinc-100 mb-6 space-y-4">
             {/* search and barcode input */}
@@ -23,12 +24,12 @@ const SearchAndFilters = ({
                     placeholder="امسح الباركود أو ابحث عن منتج..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full bg-zinc-50 border-2 border-zinc-100 rounded-2xl pr-14 py-4 text-lg font-bold focus:border-[#D4AF37] outline-none transition-all"
+                    className="w-full bg-zinc-50 border-2 border-zinc-100 rounded-2xl pr-14 py-2 text-md font-bold focus:border-[#D4AF37] outline-none transition-all"
                 />
             </div>
 
             {/* btn categories */}
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-1">
                 {categories.map(cat => (
                     <button
                         key={cat}
@@ -43,7 +44,7 @@ const SearchAndFilters = ({
 
             {/*btn brands*/}
             {subFilters.length > 0 && (
-                <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar border-t border-zinc-50 pt-3">
+                <div className={`gap-1  overflow-x-auto  pb-1 no-scrollbar border-t border-zinc-50 pt-1 ${selectedCategory === "زيوت" || selectedCategory === "فلاتر" ? "flex" :"hidden"}`} >
                     {subFilters.map(brand => (
                         <button
                             key={brand}

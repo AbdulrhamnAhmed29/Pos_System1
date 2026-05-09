@@ -7,7 +7,10 @@ import CartSidebar from '../components/CartSidebar';
 
 const POSPage = () => {
   const { allProducts } = useNotifications();
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] = useState(() => {
+    const savedCart = localStorage.getItem("cart");
+    return savedCart ? JSON.parse(savedCart) : [];
+  });
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('الكل');
   const [selectedSubFilter, setSelectedSubFilter] = useState("الكل");
@@ -15,6 +18,10 @@ const POSPage = () => {
   const [selectedAttribute, setSelectedAttribute] = useState('الكل');
   const searchRef = useRef(null);
 
+  //  saved cart item in localStorage 
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }, [cart]);
   // --- Logic (Memoized) ---
   const categories = useMemo(() => {
     if (!allProducts) return ['الكل'];
@@ -45,10 +52,17 @@ const POSPage = () => {
     });
   }, [allProducts, searchTerm, selectedCategory, selectedSubFilter]);
 
+  // --- Category Change Effect ---
+  useEffect(() => {
+    setSelectedParent(null);
+    setSelectedAttribute('الكل');
+
+  }, [selectedCategory ,selectedSubFilter]);
+
   const childProducts = useMemo(() => {
     if (!selectedParent || !allProducts) return [];
-    return allProducts.filter(p => 
-      p.parent_id === selectedParent.documentId && 
+    return allProducts.filter(p =>
+      p.parent_id === selectedParent.documentId &&
       (selectedAttribute === 'الكل' || p.attribute_sets?.[0]?.name === selectedAttribute)
     );
   }, [selectedParent, allProducts, selectedAttribute]);
@@ -65,12 +79,32 @@ const POSPage = () => {
   // --- Callbacks ---
   const addToCart = useCallback((product) => {
     setCart(prev => {
-      const existing = prev.find(item => item.id === product.id);
-      if (existing) return prev.map(item => item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item);
+      const existing = prev.find(item => item.documentId === product.documentId);
+      if (existing) return prev.map(item => item.documentId === product.documentId ? { ...item, quantity: item.quantity + 1 } : item);
       return [...prev, { ...product, quantity: 1 }];
     });
+
     setSearchTerm('');
   }, []);
+
+  const scannedProduct = useMemo(() => {
+    if (!searchTerm || !allProducts) return null;
+
+    // البحث عن منتج يطابق الباركود تماماً
+    return allProducts.find(p => String(p.barcode) === searchTerm);
+  }, [searchTerm, allProducts]);
+
+  useEffect(() => {
+    if (scannedProduct) {
+      addToCart(scannedProduct);
+
+      const timer = setTimeout(() => {
+        setSearchTerm('');
+      }, 50);
+
+      return () => clearTimeout(timer);
+    }
+  }, [scannedProduct, addToCart]);
 
   // --- Effects ---
   useEffect(() => {
@@ -82,11 +116,11 @@ const POSPage = () => {
 
   return (
     <div className="min-h-screen bg-zinc-50 text-right" dir="rtl">
-      <div className="flex h-screen overflow-hidden">
-        
-        {/* الجانب الأيمن: المنتجات */}
-        <div className="flex-1 flex flex-col p-6 overflow-hidden">
-          <SearchAndFilters 
+      <div className="flex h-screen gap-2 overflow-hidden">
+
+        {/* right side (products)  */}
+        <div className="flex-1 flex flex-col p-1 overflow-hidden">
+          <SearchAndFilters
             searchTerm={searchTerm} setSearchTerm={setSearchTerm} searchRef={searchRef}
             categories={categories} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory}
             subFilters={subFilters} selectedSubFilter={selectedSubFilter} setSelectedSubFilter={setSelectedSubFilter}
@@ -94,7 +128,7 @@ const POSPage = () => {
 
           <div className="flex-1 overflow-y-auto custom-scrollbar">
             {selectedParent ? (
-              <ChildProductView 
+              <ChildProductView
                 selectedParent={selectedParent} setSelectedParent={setSelectedParent}
                 childProducts={childProducts} availableAttributes={availableAttributes}
                 selectedAttribute={selectedAttribute} setSelectedAttribute={setSelectedAttribute}
@@ -110,7 +144,8 @@ const POSPage = () => {
           </div>
         </div>
 
-        {/* الجانب الأيسر: السلة */}
+
+        {/* left side (cart)  */}
         <CartSidebar cart={cart} setCart={setCart} cartTotal={cartTotal} />
       </div>
     </div>

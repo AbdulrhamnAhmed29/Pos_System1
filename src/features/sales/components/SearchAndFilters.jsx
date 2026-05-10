@@ -10,7 +10,8 @@ const SearchAndFilters = ({
     setSelectedCategory,
     subFilters,
     selectedSubFilter,
-    setSelectedSubFilter
+    setSelectedSubFilter,
+    isModalOpen
 }) => {
 
     return (
@@ -20,6 +21,7 @@ const SearchAndFilters = ({
                 <Barcode className="absolute right-5 top-1/2 -translate-y-1/2 text-zinc-400 group-focus-within:text-[#D4AF37]" size={22} />
                 <input
                     ref={searchRef}
+                    disabled={isModalOpen}
                     type="text"
                     placeholder="امسح الباركود أو ابحث عن منتج..."
                     value={searchTerm}

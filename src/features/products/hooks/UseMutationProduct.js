@@ -71,7 +71,7 @@ export const useMutationProduct = () => {
   const updateMutation = useMutation({
     mutationFn: async ({ id, payload }) => {
 
-      // 1- تحديث المنتج الأب
+      // 1- parent update
       const parentUpdate = {
         data: {
           name: payload.name,
@@ -81,38 +81,30 @@ export const useMutationProduct = () => {
         },
       };
 
+      // await to take this id 
       const parentResponse = await productService.updateProduct(id, parentUpdate);
       console.log(parentResponse);
-      
-
-      // تأكد إن parentId مأخوذ من الـ id اللي جاي للهوك أصلاً أو الاستجابة
       const parentId = id;
       const productName = payload.name;
 
-      // 2- تحديث الأطفال (Variants)
+      // 2-(Variants)
       const childrenPromise = payload.variants.map((v) => {
-
         const childPayload = {
           data: {
-            name: productName, // أو يفضل تدمج معاه الحجم لو متاح
+            name: productName,
             attribute_sets: v.attributeSet,
             attributes: v.attribute_id,
             barcode: v.barcode,
-            parent_id: parentId, // الربط بالأب
+            parent_id: parentId,
             cost_price: v.cost_price,
             quantity: v.quantity,
           }
         };
 
+        // if find this product edit it else add it 
         if (v.documentId) {
-          console.log(v.documentId);
-          
-          console.log(" and update new ");
-
           return productService.updateProduct(v.documentId, childPayload);
         } else {
-          console.log("else and create new ");
-
           return productService.addProduct(childPayload);
         }
       });

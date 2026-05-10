@@ -10,6 +10,8 @@ const ChildProductView = ({
   setSelectedAttribute,
   addToCart
 }) => {
+
+
   return (
     <div className="animate-in fade-in slide-in-from-bottom-4 duration-300">
       <div className="flex items-center justify-between mb-6 bg-zinc-900 p-5 rounded-3xl text-white">
@@ -48,7 +50,7 @@ const ChildProductView = ({
             onClick={() => addToCart(child)}
             className="group relative p-5 bg-white rounded-[1.8rem] border border-zinc-100 shadow-sm hover:shadow-2xl hover:border-[#D4AF37]/50 hover:-translate-y-1.5 transition-all duration-300 cursor-pointer overflow-hidden"
           >
-            <div className="flex justify-between items-center mb-5">
+            <div className="flex justify-between items-center mb-4">
               <span className="bg-zinc-100 text-zinc-500 px-3 py-1 rounded-full text-[10px] font-bold">
                 {child.attribute_sets?.[0]?.name || 'افتراضي'}
               </span>
@@ -56,15 +58,23 @@ const ChildProductView = ({
                 <Plus size={18} strokeWidth={3} />
               </div>
             </div>
-            <div className="space-y-3">
-              <h3 className="font-bold text-zinc-800 text-sm line-clamp-2 min-h-[2.5rem]">{child.name}</h3>
-              <h3 className="font-bold text-zinc-800 text-sm line-clamp-2 min-h-[2.5rem]">{child.attributes?.name}</h3>
 
-              <div className="pt-2 flex items-baseline gap-1 border-t border-zinc-50">
-                <span className="text-2xl font-black text-zinc-900">{child.cost_price}</span>
+            <div className="space-y-3">
+              <div>
+                <h3 className="font-bold text-zinc-800 text-sm">{child?.name}</h3>
+                <span className="inline-block mt-1 text-[11px] font-medium text-zinc-500 bg-zinc-50 px-2 py-0.5 rounded-md border border-zinc-100">
+                  {child.attributes?.[0]?.name}
+                </span>
+              </div>
+
+              <div className="pt-3 flex items-baseline gap-1 border-t border-zinc-50">
+                <span className="text-2xl font-black text-zinc-900 tracking-tight">
+                  {child.cost_price}
+                </span>
                 <span className="text-[10px] font-bold text-zinc-400">ج.م</span>
               </div>
             </div>
+
             <div className="absolute bottom-0 left-0 w-0 h-1 bg-[#D4AF37] group-hover:w-full transition-all duration-500" />
           </div>
         ))}

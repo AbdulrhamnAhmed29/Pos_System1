@@ -11,7 +11,7 @@ export const NotificationProvider = ({ children }) => {
 
     return products.filter(product => {
       const isLowBulk = (product.parent_id === null && product.bulk_quantity > 0 && product.bulk_quantity < 30);
-      const isLowQuantity = (product.quantity !== null && product.quantity > 0 && product.quantity < 20);
+      const isLowQuantity = (product.quantity !== null && product.quantity > 0 && product.quantity < 21);
       return isLowBulk || isLowQuantity;
     });
   }, [products]); 

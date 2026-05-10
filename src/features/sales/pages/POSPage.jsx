@@ -4,24 +4,43 @@ import SearchAndFilters from '../components/SearchAndFilters';
 import ProductCard from '../components/ProductGrid';
 import ChildProductView from '../components/ChildProductView';
 import CartSidebar from '../components/CartSidebar';
+import { CheckoutModal } from '../../orders/components/CheckoutModal';
+import { useOrderMutation } from "../../orders/hooks/useMutationOrders"
+import { CustomToast } from '../../../ui/ToastComponent';
 
 const POSPage = () => {
+  //  products array 
   const { allProducts } = useNotifications();
+  //  cart array 
   const [cart, setCart] = useState(() => {
     const savedCart = localStorage.getItem("cart");
     return savedCart ? JSON.parse(savedCart) : [];
   });
+  // search input 
   const [searchTerm, setSearchTerm] = useState('');
+  //  filtration 
   const [selectedCategory, setSelectedCategory] = useState('الكل');
   const [selectedSubFilter, setSelectedSubFilter] = useState("الكل");
   const [selectedParent, setSelectedParent] = useState(null);
   const [selectedAttribute, setSelectedAttribute] = useState('الكل');
   const searchRef = useRef(null);
+  const [toast, setToast] = useState({ show: false, message: "" });
 
+  //  Model 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  // create order function 
+  const { createOrder, isLoading } = useOrderMutation();
+  const handleConfirm = (formData) => {
+    createOrder({ orderData: formData, cart: cart });
+  };
+
+
+  // _____________________________________________
   //  saved cart item in localStorage 
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
+  // _____________________________________________
   // --- Logic (Memoized) ---
   const categories = useMemo(() => {
     if (!allProducts) return ['الكل'];
@@ -52,12 +71,15 @@ const POSPage = () => {
     });
   }, [allProducts, searchTerm, selectedCategory, selectedSubFilter]);
 
+  // _____________________________________________
+
+
   // --- Category Change Effect ---
   useEffect(() => {
     setSelectedParent(null);
     setSelectedAttribute('الكل');
 
-  }, [selectedCategory ,selectedSubFilter]);
+  }, [selectedCategory, selectedSubFilter]);
 
   const childProducts = useMemo(() => {
     if (!selectedParent || !allProducts) return [];
@@ -81,6 +103,7 @@ const POSPage = () => {
     setCart(prev => {
       const existing = prev.find(item => item.documentId === product.documentId);
       if (existing) return prev.map(item => item.documentId === product.documentId ? { ...item, quantity: item.quantity + 1 } : item);
+      setToast({ show: true, message: `تم إضافة ${product.name} للسلة` });
       return [...prev, { ...product, quantity: 1 }];
     });
 
@@ -116,17 +139,23 @@ const POSPage = () => {
 
   return (
     <div className="min-h-screen bg-zinc-50 text-right" dir="rtl">
-      <div className="flex h-screen gap-2 overflow-hidden">
+      <CustomToast
+        isOpen={toast.show}
+        message={toast.message}
+        onClose={() => setToast({ ...toast, show: false })}
+      />
+      <div className="flex  gap-2 overflow-hidden">
 
         {/* right side (products)  */}
-        <div className="flex-1 flex flex-col p-1 overflow-hidden">
+        <div className="flex-1 me-[395px] flex flex-col p-1 ">
           <SearchAndFilters
+            isModalOpen={isModalOpen}
             searchTerm={searchTerm} setSearchTerm={setSearchTerm} searchRef={searchRef}
             categories={categories} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory}
             subFilters={subFilters} selectedSubFilter={selectedSubFilter} setSelectedSubFilter={setSelectedSubFilter}
           />
 
-          <div className="flex-1 overflow-y-auto custom-scrollbar">
+          <div className="flex-1 ">
             {selectedParent ? (
               <ChildProductView
                 selectedParent={selectedParent} setSelectedParent={setSelectedParent}
@@ -145,9 +174,27 @@ const POSPage = () => {
         </div>
 
 
-        {/* left side (cart)  */}
-        <CartSidebar cart={cart} setCart={setCart} cartTotal={cartTotal} />
+        <div className='fixed left-2 top-35'>
+          {/* left side (cart)  */}
+          <CartSidebar
+            cart={cart}
+            onOpen={() => setIsModalOpen(true)}
+            isOpen={isModalOpen}
+            setCart={setCart}
+            cartTotal={cartTotal} />
+        </div>
+
       </div>
+
+      {/* Checkout Model  */}
+      <CheckoutModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={handleConfirm}
+        totalAmount={cartTotal}
+        isLoading={isLoading}
+        setCart={setCart}
+      />
     </div>
   );
 };

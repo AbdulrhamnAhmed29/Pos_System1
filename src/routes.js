@@ -23,7 +23,7 @@ export const routes = [
         isPublic: true,
     },
     {
-        path: '/', // الأب (Layout)
+        path: '/', 
         element: MainLayout,
         isPublic: false,
         children: [

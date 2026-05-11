@@ -7,6 +7,7 @@ import CartSidebar from '../components/CartSidebar';
 import { CheckoutModal } from '../../orders/components/CheckoutModal';
 import { useOrderMutation } from "../../orders/hooks/useMutationOrders"
 import { CustomToast } from '../../../ui/ToastComponent';
+import { ReceiptDesign } from '../../orders/components/Receipt';
 
 const POSPage = () => {
   //  products array 
@@ -26,12 +27,37 @@ const POSPage = () => {
   const searchRef = useRef(null);
   const [toast, setToast] = useState({ show: false, message: "" });
 
+  // reciept data 
+  const [dataToPrint, setDataToPrint] = useState(null);
+
+  const receiptRef = useRef();
+
   //  Model 
   const [isModalOpen, setIsModalOpen] = useState(false);
   // create order function 
   const { createOrder, isLoading } = useOrderMutation();
+
+
+
   const handleConfirm = (formData) => {
-    createOrder({ orderData: formData, cart: cart });
+    createOrder({ orderData: formData, cart: cart },
+      {
+        onSuccess: () => {
+          setCart([]);
+
+          // setTimeout(() => {
+          //   setDataToPrint(null);
+          // }, 1000);
+        },
+        onError: (error) => {
+          console.error("Error:", error);
+        }
+      }
+    );
+    setDataToPrint({
+      orderData: formData,
+      cart: [...cart]
+    });
   };
 
 
@@ -195,6 +221,16 @@ const POSPage = () => {
         isLoading={isLoading}
         setCart={setCart}
       />
+
+      {dataToPrint && (
+        <div className='hidden'>
+          <ReceiptDesign
+            ref={receiptRef}
+            orderData={dataToPrint.orderData}
+            cart={dataToPrint.cart}
+          />
+        </div>
+      )}
     </div>
   );
 };

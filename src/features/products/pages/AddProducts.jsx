@@ -19,10 +19,6 @@ function AddProducts() {
     const { attributeSet } = useGetAttributeSet();
     const { attributes } = useGetAttribute();
     const { mutate } = useMutationProduct();
-
-
-
-
     return (
         <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8" dir="rtl">
             <div className="max-w-6xl mx-auto">

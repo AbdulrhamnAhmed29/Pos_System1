@@ -40,9 +40,9 @@ export const CheckoutModal = ({ isOpen, onClose, onConfirm, totalAmount, isLoadi
             ...data,
             totalPrice: totalAmount,
             finalPrice: finalPrice,
+            barcode: `INV-${Date.now().toString().slice(-6)}`
         };
-        console.log(finalFData);    
-        onConfirm(finalFData );
+        onConfirm(finalFData);
         reset();
     };
 
@@ -50,10 +50,9 @@ export const CheckoutModal = ({ isOpen, onClose, onConfirm, totalAmount, isLoadi
         setCart([]);
         localStorage.removeItem("cart");
         onClose();
-        
     };
 
-    
+
 
     return (
         <AnimatePresence>
@@ -119,7 +118,7 @@ export const CheckoutModal = ({ isOpen, onClose, onConfirm, totalAmount, isLoadi
 
                             {/* Financial Summary */}
                             <motion.div
-                                layout 
+                                layout
                                 className="bg-zinc-50 p-5 rounded-2xl border border-zinc-100 space-y-3"
                             >
                                 <div className="flex justify-between text-zinc-500 text-sm">

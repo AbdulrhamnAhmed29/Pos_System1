@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query';
+import { useQueryClient, useMutation } from '@tanstack/react-query';
 import { servicesOrders } from '../servicesOrders/ServicesOrders';
 import { useGetProducts } from "../../products/hooks/UseGetProducts"
 import productService from '../../products/services/Services';
@@ -7,7 +7,7 @@ import productService from '../../products/services/Services';
 
 
 export const useOrderMutation = () => {
-
+  const queryClient = useQueryClient()
     const { data } = useGetProducts()
     const mutation = useMutation({
         mutationFn: async ({ orderData, cart }) => {
@@ -85,10 +85,37 @@ export const useOrderMutation = () => {
 
     });
 
+const updateMutation = useMutation({
+    mutationFn:({id , payload})=>servicesOrders.updateOrder( id , {
+        data:{
+            customer:payload.updatedData.customer,
+            status_order:payload.updatedData.status_order
+        },
+        onError:(error)=>{
+            console.log(error);
+             
+        }
+    })
+})
+
+    const removeMutation = useMutation({
+        mutationFn: (id) => servicesOrders.deleteOrder(id),
+        onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['orders'] });
+            console.log("Order deleted and list updated");
+        },
+        onError: (err) => {
+            console.log("Full Error Object:", err);
+            const errorMessage = err?.response?.data?.error?.message || "حدث خطأ أثناء الحذف";
+            console.log(errorMessage);
+        }
+    });
     return {
         createOrder: mutation.mutate,
         isLoading: mutation.isPending,
         isSuccess: mutation.isSuccess,
         error: mutation.error,
+        update:updateMutation.mutate,
+        remove: removeMutation.mutate
     };
 };

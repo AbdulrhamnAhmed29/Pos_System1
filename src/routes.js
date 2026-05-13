@@ -6,6 +6,13 @@ const AddProducts = lazy(() => import('./features/products/pages/AddProducts'));
 const updateProducts = lazy(() => import('./features/products/pages/UpdateProduct'));
 const RestockPage = lazy(() => import('./features/inventory/pages/RestockPage'));
 const POSPage = lazy(() => import('./features/sales/pages/POSPage'));
+const ordersSales = lazy(() => import('./features/orders/Pages/SalesOrder'));
+const orderDetails = lazy(() => import('./features/orders/components/OrderDetails'));
+const orderUpdate = lazy(() => import('./features/orders/components/UpdateModal'));
+
+
+
+
 const NotFoundPage = lazy(() => import('./ui/NotFoundPage'));
 
 
@@ -23,7 +30,7 @@ export const routes = [
         isPublic: true,
     },
     {
-        path: '/', 
+        path: '/',
         element: MainLayout,
         isPublic: false,
         children: [
@@ -36,6 +43,19 @@ export const routes = [
                 element: Products,
             },
             {
+                path: '/sales',
+                element: ordersSales,
+            },
+            {
+                path: '/orderDetails/:id',
+                element: orderDetails,
+            },
+            {
+                path: '/update_order/:id',
+                element:orderUpdate ,
+            },
+
+            {
                 path: 'add-products',
                 element: AddProducts,
             },
@@ -47,7 +67,7 @@ export const routes = [
                 path: 'pos',
                 element: POSPage,
             },
-          
+
             {
                 path: 'update-product/:id',
                 element: updateProducts,

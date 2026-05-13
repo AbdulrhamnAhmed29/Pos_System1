@@ -18,7 +18,7 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
         { path: '/dashboard', label: 'الإحصائيات', icon: LayoutDashboard },
         { path: '/products', label: 'المخزون', icon: Box },
         { path: '/restock', label: 'المنتجات الناقصة', icon: AlertTriangle },
-        { path: '/sells', label: 'المبيعات', icon: Wallet },
+        { path: '/Sales', label: 'المبيعات', icon: Wallet },
         { path: '/expense', label: 'المصاريف', icon: Wallet },
     ];
 

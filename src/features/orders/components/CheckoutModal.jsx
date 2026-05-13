@@ -26,7 +26,7 @@ export const CheckoutModal = ({ isOpen, onClose, onConfirm, totalAmount, isLoadi
         formState: { errors }
     } = useForm({
         defaultValues: {
-            customerName: "عميل",
+            customerName: "عميل نقدي",
             paymentStatus: "كاش",
             discount: 0,
         }

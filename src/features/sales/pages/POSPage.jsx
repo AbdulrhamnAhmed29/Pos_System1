@@ -8,6 +8,7 @@ import { CheckoutModal } from '../../orders/components/CheckoutModal';
 import { useOrderMutation } from "../../orders/hooks/useMutationOrders"
 import { CustomToast } from '../../../ui/ToastComponent';
 import { ReceiptDesign } from '../../orders/components/Receipt';
+import { useReactToPrint } from 'react-to-print';
 
 const POSPage = () => {
   //  products array 
@@ -27,10 +28,14 @@ const POSPage = () => {
   const searchRef = useRef(null);
   const [toast, setToast] = useState({ show: false, message: "" });
 
+  
   // reciept data 
-  const [dataToPrint, setDataToPrint] = useState(null);
 
-  const receiptRef = useRef();
+  const contentRef = useRef(null);
+  const [dataToPrint, setDataToPrint] = useState(null);
+  const handlePrint = useReactToPrint({
+    contentRef, 
+  });
 
   //  Model 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -43,8 +48,8 @@ const POSPage = () => {
     createOrder({ orderData: formData, cart: cart },
       {
         onSuccess: () => {
+          handlePrint();
           setCart([]);
-
           // setTimeout(() => {
           //   setDataToPrint(null);
           // }, 1000);
@@ -223,9 +228,9 @@ const POSPage = () => {
       />
 
       {dataToPrint && (
-        <div className='hidden'>
+        <div className=''>
           <ReceiptDesign
-            ref={receiptRef}
+            ref={contentRef}
             orderData={dataToPrint.orderData}
             cart={dataToPrint.cart}
           />

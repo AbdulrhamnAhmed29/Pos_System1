@@ -2,18 +2,19 @@ import api from './axiosConfig'
 
 // global crud functions for all resources, using the configured axios instance 
 const BaseApi = {
-  getAll: async (resource) => {
-    const { data } = await api.get(resource)
+  getAll: async (resource, params) => {
+    const { data } = await api.get(resource, params)
     return data
   },
 
-  getById: async (resource, id) => {
-    const { data } = await api.get(`${resource}/${id}`)
-    return data
+  getById: async (resource, id, query = "") => {
+    const queryString = query ? `?${query}` : "";
+    const { data } = await api.get(`${resource}/${id}${queryString}`);
+    return data;
   },
 
   create: async (resource, payload) => {
-    const { data } = await api.post(resource, payload); 
+    const { data } = await api.post(resource, payload);
     return data
   },
 

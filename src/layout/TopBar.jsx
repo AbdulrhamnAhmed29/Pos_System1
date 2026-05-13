@@ -18,7 +18,7 @@ const TopBar = ({ isCollapsed }) => {
             '/products': 'إدارة المنتجات',
             '/add-products': 'إضافة منتج',
             '/restock': 'المنتجات الناقصة',
-            '/sells': 'المبيعات',
+            '/Sales': 'المبيعات',
             '/expense': 'المصاريف',
         };
         return titles[pathname] || 'لوحة التحكم';

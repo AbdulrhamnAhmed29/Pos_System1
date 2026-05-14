@@ -1,11 +1,9 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import productService from '../services/Services'
 import Swal from 'sweetalert2'
-import useNavigate from "react"
 
 export const useMutationProduct = () => {
   const queryClient = useQueryClient();
-      const navigate = useNavigate();
 
 
   //1- add product function 
@@ -122,7 +120,6 @@ export const useMutationProduct = () => {
         text: 'تم تحديث المنتج بنجاح',
         confirmButtonColor: '#D4AF37'
       });
-      navigate('/products');
 
     },
     onError: (error) => {

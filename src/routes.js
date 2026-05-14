@@ -9,6 +9,12 @@ const POSPage = lazy(() => import('./features/sales/pages/POSPage'));
 const ordersSales = lazy(() => import('./features/orders/Pages/SalesOrder'));
 const orderDetails = lazy(() => import('./features/orders/components/OrderDetails'));
 const orderUpdate = lazy(() => import('./features/orders/components/UpdateModal'));
+const expenses = lazy(() => import('./features/expenses/expensesPage/ExpensesPage'));
+const addexpense = lazy(() => import('./features/expenses/expensesPage/AddExpenses'));
+const UpdateExpenses = lazy(() => import('./features/expenses/expensesPage/UpdateExpenses'));
+
+
+
 
 
 
@@ -52,13 +58,26 @@ export const routes = [
             },
             {
                 path: '/update_order/:id',
-                element:orderUpdate ,
+                element: orderUpdate,
             },
 
             {
                 path: 'add-products',
                 element: AddProducts,
             },
+            {
+                path: '/update_expenses/:id',
+                element: UpdateExpenses,
+            },
+            {
+                path: 'expense',
+                element: expenses,
+            },
+            {
+                path: '/addexpense',
+                element: addexpense,
+            },
+
             {
                 path: 'restock',
                 element: RestockPage,

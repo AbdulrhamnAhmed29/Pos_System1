@@ -1,6 +1,8 @@
 import React from 'react'
-import { AlertTriangle, Package, Droplets,  } from 'lucide-react'
+import { AlertTriangle, Package, Droplets, } from 'lucide-react'
 import { useNotifications } from '../../../shared/context/NotificationContext'
+import { ReceiptText, } from 'lucide-react';
+
 
 const RestockPage = () => {
     const { lowStockProducts } = useNotifications();
@@ -9,13 +11,13 @@ const RestockPage = () => {
         <div className="min-h-screen w-full pt-8 pb-20 px-4 lg:px-8 font-sans" dir="rtl">
             {/* Header Section */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
-                <div className="relative">
-                    <div className="flex items-center gap-4 mb-2">
-                        <div className="w-1.5 h-10 bg-[#D4AF37] rounded-full shadow-[0_0_20px_rgba(212,175,55,0.5)]"></div>
-                        <h1 className="text-4xl font-black text-zinc-900 tracking-tight">قائمة النواقص</h1>
-                    </div>
-                    <p className="text-zinc-400 font-bold text-sm mr-6">متابعة دقيقة للمنتجات التي شارفت على النفاذ</p>
-                </div>
+
+                <div>
+                    <h1 className="text-3xl font-black text-zinc-900 flex items-center gap-3">
+                        <ReceiptText className="text-[#D4AF37]" size={32} />
+                        قائمة <span className="text-[#D4AF37] font-outline-2">(النواقص)</span>
+                    </h1>
+                    <p className="text-zinc-400 font-bold text-sm mr-6">متابعة دقيقة للمنتجات التي شارفت على النفاذ</p>                </div>
 
                 {/* Counter Card */}
                 <div className="bg-white border border-zinc-100 shadow-xl shadow-red-500/5 rounded-[2rem] px-8 py-5 flex items-center gap-5 transition-transform hover:scale-[1.02]">
@@ -90,7 +92,7 @@ const RestockPage = () => {
                                     </div>
                                 </div>
 
-                              
+
 
                                 {product.barcode && (
                                     <div className="flex items-center justify-center gap-2 opacity-30 group-hover:opacity-100 transition-opacity">

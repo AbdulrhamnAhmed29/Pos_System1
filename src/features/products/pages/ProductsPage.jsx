@@ -4,7 +4,9 @@ import { useMutationProduct } from '../hooks/UseMutationProduct';
 import { ProductsTable } from '../components/ProductsTable';
 import { Plus } from 'lucide-react';
 import Swal from 'sweetalert2';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { Boxes } from 'lucide-react'; 
+
 
 const ProductsPage = () => {
   const { data: products, isLoading } = useGetProducts();
@@ -13,10 +15,7 @@ const ProductsPage = () => {
 
   const productsList = products || [];
 
-  const navigate = useNavigate();
-  const navigation = () => {
-    navigate('/add-products')
-  }
+
 
 
   // إعدادات SweetAlert الموحدة
@@ -55,12 +54,17 @@ const ProductsPage = () => {
 
       {/* Header Section */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
+
+
         <div>
-          <div className="flex items-center gap-3 mb-1">
-            <div className="w-2 h-8 bg-[#D4AF37] rounded-full shadow-[0_0_15px_rgba(212,175,55,0.4)]"></div>
-            <h1 className="text-3xl font-black text-zinc-900 tracking-tight">إدارة المنتجات</h1>
-          </div>
-          <p className="text-zinc-500 font-bold text-sm mr-5 opacity-70 italic">نظام سِجل لإدارة الزيوت وقطع الغيار</p>
+          <h1 className="text-3xl font-black text-zinc-900 flex items-center gap-3">
+            <Boxes className="text-[#D4AF37]" size={32} />
+            ادارة <span className="text-[#D4AF37] font-outline-2">(المخزون)</span>
+          </h1>
+          <p className="text-zinc-500 font-bold text-sm mr-11 opacity-80 flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-[#D4AF37] animate-pulse"></span>
+            رقابة ذكية على حركة الوارد والمنصرف وتتبع الكميات
+          </p>
         </div>
 
         <button>
@@ -69,7 +73,7 @@ const ProductsPage = () => {
             className="bg-zinc-900 w-44 text-white px-10 py-4 rounded-2xl font-black text-sm hover:bg-[#D4AF37] hover:text-zinc-900 transition-all flex items-center gap-3 mx-auto shadow-2xl hover:scale-105 active:scale-95"
           >
             <Plus size={20} />
-            إضافة  منتج 
+            إضافة  منتج
           </Link>
         </button>
       </div>

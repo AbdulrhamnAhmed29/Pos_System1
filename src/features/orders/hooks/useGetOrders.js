@@ -7,14 +7,29 @@ export const useOrders = (id) => {
     const [status, setStatus] = useState("الكل");
     const today1 = new Intl.DateTimeFormat('sv-SE').format(new Date());
     const [selectedDate, setSelectedDate] = useState(today1);
-    const [startDay, setStartDay] = useState();
-    const [endDay, setEndDay] = useState();
+    // to reports 
+    const [startDay, setStartDay] = useState(today1);
+    const [endDay, setEndDay] = useState(today1);
 
+
+    //   to table orders 
     const { data: orders, isLoading, isFetching } = useQuery({
-        queryKey: ["orders", searchItem, status, selectedDate ,startDay ,endDay],
+        queryKey: ["orders", searchItem, status, selectedDate],
         queryFn: () => servicesOrders.getOrders(searchItem, status, selectedDate),
         keepPreviousData: true,
     });
+
+
+
+    // to reports 
+    const { data: reportsOrders } = useQuery({
+        queryKey: ["ordersToReports", startDay, endDay],
+        queryFn: () => servicesOrders.getOrdersToReports(startDay, endDay),
+        keepPreviousData: true,
+    });
+
+
+
 
     const {
         data: orderById,
@@ -26,18 +41,32 @@ export const useOrders = (id) => {
         enabled: !!id,
     });
     return {
+        // get orders 
         orders,
         meta: orders?.meta,
         isLoading: isLoading || isFetching,
+        // _________
+        // _________
+        // filtration orders table
         searchItem, setSearchitem,
         status, setStatus,
         setSelectedDate,
         selectedDate,
+        // _____________
+        //   orderById 
         orderById,
         isLoadingSingle,
         isError,
+        // ________________
+
+        // filtration orders reports 
+        endDay,
+        startDay,
         setStartDay,
-        setEndDay
+        setEndDay,
+        reportsOrders,
+
+      
 
     };
 };

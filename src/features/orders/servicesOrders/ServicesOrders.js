@@ -7,12 +7,7 @@ export const servicesOrders = {
         return data
     },
 
-    createOrdersItems: async (payload) => {
-        const { data } = await BaseApi.create("/order-items", payload);
-        return data
-    },
-
-    getOrders: async (searchTerm, status, selectedDate, startDay, endDay) => {
+    getOrders: async (searchTerm, status, selectedDate) => {
         const filters = { $and: [] };
 
         // 1. search filter 
@@ -54,8 +49,8 @@ export const servicesOrders = {
     },
     getOrdersToReports: async (startDay, endDay) => {
         const filters = { $and: [] };
-        if (startDay && endDay) {
 
+        if (startDay && endDay) {
             filters.$and.push({
                 createdAt: {
                     $gte: `${startDay}T00:00:00.000+03:00`,
@@ -66,14 +61,20 @@ export const servicesOrders = {
 
         const query = qs.stringify({
             filters: filters.$and.length > 0 ? filters : {},
-            populate: '*',
+            populate: {
+                order_items: {
+                    populate: ['product']
+                }
+            },
             sort: ['createdAt:desc'],
             pagination: {
                 limit: 2000,
             },
         }, { encodeValuesOnly: true });
 
-        const { data } = await BaseApi.getAll(`/orders?${query}`);
+        const fullUrl = `/orders?${query}`;
+
+        const { data } = await BaseApi.getAll(fullUrl);
         return data;
     },
     getOrderById: async (id) => {
@@ -91,5 +92,13 @@ export const servicesOrders = {
     deleteOrder: async (id) => {
         const res = await BaseApi.remove("orders", id);
         return res
-    }
+    },
+
+    // order items 
+    createOrdersItems: async (payload) => {
+        const { data } = await BaseApi.create("/order-items", payload);
+        return data
+    },
+
+
 }

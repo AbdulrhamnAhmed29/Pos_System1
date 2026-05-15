@@ -28,10 +28,7 @@ const BaseApi = {
     return data
   },
 
-  bulkUpdate: async (resource, payload) => {
-    const { data } = await api.put(resource, payload)
-    return data
-  },
+
 
   upload: async (resource, formData) => {
     const { data } = await api.post(resource, formData, {

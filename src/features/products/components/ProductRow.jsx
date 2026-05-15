@@ -23,6 +23,10 @@ export const ProductRow = ({ product, activeType, onEdit, onDelete }) => {
             ${isParent ? 'bg-gray-200' : ''}
 
 
+
+            
+
+
     `}>
 
       {/* product name   */}
@@ -81,7 +85,7 @@ export const ProductRow = ({ product, activeType, onEdit, onDelete }) => {
       {/*   (Bulk) */}
       {activeType !== "جركن" && (
         <td className="px-6 py-5 text-center">
-          <span className={`text-sm font-black  ${is_Services ? "hidden" : ""} ${product.bulk_quantity < 40 &&product.bulk_quantity !=null ? 'bg-red-100 text-red-600 animate-pulse' : 'bg-emerald-50 text-emerald-600'}`}>
+          <span className={`text-sm font-black  ${is_Services ? "hidden" : ""} ${product.bulk_quantity < 40 && product.bulk_quantity != null ? 'bg-red-100 text-red-600 animate-pulse' : 'bg-emerald-50 text-emerald-600'}`}>
             {product.bulk_quantity ?? '---'}
           </span>
         </td>

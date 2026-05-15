@@ -2,6 +2,7 @@ import React from 'react';
 import { useOrders } from "../../orders/hooks/useGetOrders";
 
 import TableOrders from '../components/TableOrders';
+import { Wallet } from 'lucide-react';
 
 function SalesOrder() {
     const {
@@ -10,7 +11,7 @@ function SalesOrder() {
 
     } = useOrders();
 
-   
+
 
 
 
@@ -31,7 +32,10 @@ function SalesOrder() {
             {/* Header Section */}
             <div className="flex justify-between items-end mb-10">
                 <div>
-                    <h1 className="text-3xl font-black text-gray-900 mb-2">إدارة المبيعات</h1>
+                    <h1 className="text-3xl font-black text-zinc-900 flex items-center gap-3">
+                        <Wallet className="text-[#D4AF37]" size={32} />
+                        ادارة <span className="text-[#D4AF37] font-outline-2">(المبيعات)</span>
+                    </h1>
                     <p className="text-gray-500 flex items-center gap-2">
                         <span className="w-2 h-2 bg-yellow-400 rounded-full"></span>
                         متابعة حية لجميع العمليات والطلبات المسجلة
@@ -56,30 +60,20 @@ function SalesOrder() {
                     </div>
                 </div>
             </div>
-       
+
 
             {/* Orders Data Section */}
             <div className="bg-white rounded-[2.5rem] shadow-lg border border-gray-50 overflow-hidden">
-               
+
 
                 <div className="p-4">
-                    {orders && orders.length > 0 ? (
-                        <div className="overflow-x-auto">
-                            {/* table orders */}
-                            <div className="space-y-4">
-                                <TableOrders orders={orders} />
-                            </div>
+                    <div className="overflow-x-auto">
+                        {/* table orders */}
+                        <div className="space-y-4">
+                            <TableOrders orders={orders} />
                         </div>
-                    ) : (
-                        <div className="py-20 text-center">
-                            <div className="text-gray-300 mb-4">
-                                <svg className="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
-                                </svg>
-                            </div>
-                            <p className="text-gray-400 font-medium">لا توجد أوردرات مسجلة بعد</p>
-                        </div>
-                    )}
+                    </div>
+
                 </div>
             </div>
         </div>

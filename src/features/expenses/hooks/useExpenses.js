@@ -31,7 +31,7 @@ export const useExpenses = (id) => {
                 Person: payload.Person,
                 notes: payload.notes,
                 price: payload.price,
-                category: payload.category
+                type: payload.category
             }
         })
 
@@ -46,7 +46,7 @@ export const useExpenses = (id) => {
     const updateExpense = useMutation({
         mutationFn: ({ id, data }) => ExpensesServises.updateExpenses(id, {
             data: {
-                category: data.category,
+                type: data.category,
                 price: data.price,
                 Person: data.Person,
                 notes: data.notes

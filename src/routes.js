@@ -12,6 +12,8 @@ const orderUpdate = lazy(() => import('./features/orders/components/UpdateModal'
 const expenses = lazy(() => import('./features/expenses/expensesPage/ExpensesPage'));
 const addexpense = lazy(() => import('./features/expenses/expensesPage/AddExpenses'));
 const UpdateExpenses = lazy(() => import('./features/expenses/expensesPage/UpdateExpenses'));
+const Statistics = lazy(() => import('./features/statistics/page/Statistics'));
+
 
 
 
@@ -42,7 +44,7 @@ export const routes = [
         children: [
             {
                 path: 'dashboard',
-                element: () => <div>إحصائيات المحل</div>,
+                element:Statistics,
             },
             {
                 path: 'products',

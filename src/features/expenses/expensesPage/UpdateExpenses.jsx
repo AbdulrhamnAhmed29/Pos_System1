@@ -19,7 +19,7 @@ function UpdateExpenses() {
         if (byId) {
             const data = byId;
             reset({
-                category: data.category,
+                type: data.category,
                 price: data.price,
                 Person: data.Person,
                 notes: data.notes
@@ -29,7 +29,6 @@ function UpdateExpenses() {
 
 
     const onSubmit = (data) => {
-        console.log(data);
         update({ id,  data }, {
             
             onSuccess: () => {
@@ -92,7 +91,6 @@ function UpdateExpenses() {
                                 <option value="بضاعة">بضاعة</option>
                                 <option value="ميه">ميه</option>
                                 <option value="كهربا">كهربا</option>
-                                <option value="اجور يومية">اجور يومية</option>
                             </select>
                         </div>
 

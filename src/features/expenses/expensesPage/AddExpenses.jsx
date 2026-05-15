@@ -1,6 +1,6 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import {useExpenses} from "../hooks/useExpenses";
+import { useExpenses } from "../hooks/useExpenses";
 import { Plus, ArrowRight, Save } from 'lucide-react';
 import Swal from 'sweetalert2';
 
@@ -12,13 +12,13 @@ function AddExpenses() {
             Person: "",
             notes: "",
             price: "",
-            category :"",
+            category: "",
         }
     });
 
     const onSubmit = (data) => {
         console.log(data);
-        
+
         add(data, {
             onSuccess: () => {
                 Swal.fire({
@@ -76,15 +76,17 @@ function AddExpenses() {
                         </div>
                         {/* Status Filter */}
                         <div className="relative">
+                            <label className="block text-sm font-black text-zinc-700 mr-2">اختر نوع المصاريف </label>
+
                             <select
-                                {...register("category",{required:"يجب ادخال نوع المصاريف"})}
+                                {...register("category", { required: "يجب ادخال نوع المصاريف" })}
                                 className="pr-9 pl-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:border-amber-500 outline-none text-sm font-bold text-gray-600 appearance-none cursor-pointer"
                             >
+                                مصاريف يومية
                                 <option value="مصاريف يومية">مصاريف يومية</option>
                                 <option value="بضاعة">بضاعة</option>
                                 <option value="ميه">ميه</option>
                                 <option value="كهربا">كهربا</option>
-                                <option value="اجور يومية">اجور يومية</option>
                             </select>
                         </div>
 

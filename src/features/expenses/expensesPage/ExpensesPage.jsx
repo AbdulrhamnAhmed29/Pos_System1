@@ -179,7 +179,7 @@ function ExpensesPage() {
                                     <div className="flex items-center gap-3">
                                         <div className="w-2 h-2 rounded-full bg-[#D4AF37] opacity-0 group-hover:opacity-100 transition-opacity"></div>
                                         <span className="font-bold text-zinc-800 text-sm">
-                                            {e.category}
+                                            {e.type}
                                         </span>
                                     </div>
                                 </td>

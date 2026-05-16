@@ -3,16 +3,19 @@ import { useForm } from 'react-hook-form';
 import { useExpenses } from "../hooks/useExpenses";
 import { Plus, ArrowRight, Save } from 'lucide-react';
 import Swal from 'sweetalert2';
+import { useNavigate } from "react-router-dom";
+
 
 function AddExpenses() {
     const { add } = useExpenses();
+    const navigate = useNavigate();
 
     const { register, handleSubmit, reset, formState: { errors } } = useForm({
         defaultValues: {
             Person: "",
             notes: "",
             price: "",
-            category: "",
+            category: "مصاريف يومية",
         }
     });
 
@@ -48,6 +51,13 @@ function AddExpenses() {
                         </h1>
                         <p className="text-zinc-500 font-bold text-sm mr-11 opacity-70">قم بتسجيل تفاصيل الخارج المالي بدقة</p>
                     </div>
+                    <button
+                        onClick={() => navigate(-1)}
+                        className="flex items-center gap-2 text-zinc-400 hover:text-zinc-900 transition-colors mb-2 group"
+                    >
+                        <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                        <span className="text-sm font-bold">العودة للقائمة</span>
+                    </button>
                 </div>
 
                 {/* Form Card */}
@@ -74,7 +84,7 @@ function AddExpenses() {
                                 className="w-full bg-zinc-50 border border-zinc-100 rounded-2xl p-4 text-sm font-black focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/20 focus:border-[#D4AF37] transition-all"
                             />
                         </div>
-                        {/* Status Filter */}
+                        {/* Status Filter
                         <div className="relative">
                             <label className="block text-sm font-black text-zinc-700 mr-2">اختر نوع المصاريف </label>
 
@@ -84,11 +94,8 @@ function AddExpenses() {
                             >
                                 مصاريف يومية
                                 <option value="مصاريف يومية">مصاريف يومية</option>
-                                <option value="بضاعة">بضاعة</option>
-                                <option value="ميه">ميه</option>
-                                <option value="كهربا">كهربا</option>
                             </select>
-                        </div>
+                        </div> */}
 
                         {/* حقل الملاحظات */}
                         <div className="space-y-2">

@@ -1,32 +1,27 @@
 import { Edit2, Trash2, Barcode, Package } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-export const ProductRow = ({ product, activeType, onEdit, onDelete }) => {
-  // التحقق من حالة المخزون
+export const ProductRow = ({ product, cost_price, buying_price, activeType, onEdit, onDelete }) => {
   const lowStock = product.quantity < 22 && product.quantity !== null;
-
-
   const isLoose = product.attribute_sets?.[0]?.name === "سايب";
   const isServices = product.quantity === 0;
   const is_Services = product.bulk_quantity === 0;
 
+  const isBarcode = product.barcode;
+
   const isParent = product.parent_id === null;
+
+  const netprot = cost_price - buying_price;
+
 
 
   if (isLoose) return null;
-
   return (
     <tr className={`
-      group transition-all duration-300 border-b border-zinc-50
-      hover:bg-zinc-50/80 relative
+      group transition-all duration-300 border-b border-zinc-50 hover:bg-zinc-50/80 relative
+      ${!isBarcode && !isParent ? "hidden" : ""}
       ${lowStock ? 'bg-red-50/20' : ''}
-            ${isParent ? 'bg-gray-200' : ''}
-
-
-
-            
-
-
+       ${isParent ? 'bg-gray-200' : ''}
     `}>
 
       {/* product name   */}
@@ -39,9 +34,10 @@ export const ProductRow = ({ product, activeType, onEdit, onDelete }) => {
             <Package size={18} />
           </div>
           <div className="flex flex-col min-w-0">
-            <span className="text-zinc-900 font-black text-sm truncate group-hover:text-[#D4AF37] transition-colors">
+            <h5 className="text-zinc-900 font-black   truncate group-hover:text-[#D4AF37] transition-colors">
               {product.name}
-            </span>
+            </h5>
+            <p className='text-[15px] text-[#D4AF37] font-black '> {product?.attributes?.[0]?.name}</p>
           </div>
         </div>
 
@@ -49,11 +45,13 @@ export const ProductRow = ({ product, activeType, onEdit, onDelete }) => {
 
       {/* product type  */}
       <td className="px-6 py-5 text-center">
-        <span className={` ${isServices ? "hidden" : ""} text-["10px"] font-black`}>{product?.attributes?.[0]?.name}</span>
-
+        <span className={` ${isServices ? "hidden" : ""} text-["10px"] font-black`}></span>
+        <span className="text-[15px] ms-1 font-black uppercase tracking-tighter">
+          {product.attribute_sets?.[0]?.name || ""}
+          { }
+        </span>
       </td>
-
-      {/* prices */}
+      {/* sales prices */}
       <td className="px-6 py-5">
         <div className={` flex flex-col gap-0.5`}>
           <div className={`text-sm font-black text-zinc-900 flex items-center gap-1 ${isParent ? "hidden" : ""}`}>
@@ -64,34 +62,42 @@ export const ProductRow = ({ product, activeType, onEdit, onDelete }) => {
       </td>
 
 
-      {/*  quantity  */}
-      {activeType !== "سايب" && (
-        <td className={` px-6 py-5 text-center`}>
-          <div className={`${isParent ? "hidden" : ""} ${isServices ? "hidden" : ""} flex flex-col  items-center`}>
-            <span className={`text-sm font-black px-3 py-1 rounded-lg ${lowStock ? 'bg-red-100 text-red-600 animate-pulse' : 'bg-emerald-50 text-emerald-600'
-              }`}>
-              {!product.quantity && isServices ? "" : product.quantity}
-
-              <span className="text-[10px] ms-1 font-black uppercase tracking-tighter">
-                {product.attribute_sets?.[0]?.name || ""}
-              </span>
-            </span>
-
-            {lowStock && <span className="text-[8px] text-red-500 font-bold mt-1">مخزون منخفض!</span>}
+      {/*buying prices */}
+      <td className="px-6 py-5">
+        <div className={` flex flex-col gap-0.5`}>
+          <div className={`text-sm font-black text-zinc-900 flex items-center gap-1 ${isParent ? "hidden" : ""}`}>
+            {product.buying_price}
+            <span className="text-[#D4AF37] text-xs">جنية</span>
           </div>
-        </td>
-      )}
+        </div>
+      </td>
 
-      {/*   (Bulk) */}
-      {activeType !== "جركن" && (
-        <td className="px-6 py-5 text-center">
-          <span className={`text-sm font-black  ${is_Services ? "hidden" : ""} ${product.bulk_quantity < 40 && product.bulk_quantity != null ? 'bg-red-100 text-red-600 animate-pulse' : 'bg-emerald-50 text-emerald-600'}`}>
-            {product.bulk_quantity ?? '---'}
-          </span>
-        </td>
-      )}
 
-      {/* الباركود */}
+
+      {/* netprot */}
+      <td className="px-6 py-5">
+        <div className={` flex flex-col gap-0.5`}>
+          <div className={`text-sm font-black text-zinc-900 flex items-center gap-1 ${isParent ? "hidden" : ""}`}>
+            {netprot}
+            <span className="text-[#D4AF37] text-xs">جنية</span>
+          </div>
+        </div>
+      </td>
+      {/* netprot */}
+      <td className="px-6 py-5">
+        <div className={` flex flex-col gap-0.5`}>
+          <div className={`text-sm font-black   flex items-center gap-1`}>
+            {isParent ? <span className={`${product.bulk_quantity<20?"text-red-600":"text-green-700"}`}>{product.bulk_quantity}</span> : <span className={`${product.quantity<20?"text-red-600":"text-green-700"}`}>{product.quantity}</span>}
+            <span className="text-[#D4AF37] text-xs"></span>
+          </div>
+        </div>
+      </td>
+
+
+
+
+
+      {/* barcode */}
       <td className={`px-6 py-5 text-center `}>
         <div className={`inline-flex items-center gap-2 px-3 py-1.5 bg-white border border-zinc-200 rounded-xl shadow-sm text-zinc-500 group-hover:border-[#D4AF37]/30 transition-colors ${isParent ? "hidden" : ""}`}>
           <Barcode size={14} className="text-zinc-400 group-hover:text-[#D4AF37]" />
@@ -99,7 +105,7 @@ export const ProductRow = ({ product, activeType, onEdit, onDelete }) => {
         </div>
       </td>
 
-      {/* الإجراءات (Actions) */}
+      {/*  (Actions) */}
       <td className="px-6 py-5">
         <div className={`flex justify-end gap-2 `}>
           <Link

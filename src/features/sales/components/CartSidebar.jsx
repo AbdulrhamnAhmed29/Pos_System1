@@ -19,7 +19,7 @@ const CartSidebar = ({ cart, setCart, cartTotal, isOpen, onClose, onOpen }) => {
         localStorage.removeItem("cart");
     }
 
-    // Variants للحركات المتكررة
+    // Variants
     const itemVariants = {
         hidden: { opacity: 0, x: 20 },
         visible: { opacity: 1, x: 0 },
@@ -38,7 +38,7 @@ const CartSidebar = ({ cart, setCart, cartTotal, isOpen, onClose, onOpen }) => {
             <div className="p-5 bg-zinc-900 text-white rounded-bl-[3rem] shadow-lg relative overflow-hidden">
                 <div className="flex justify-between items-center mb-3">
                     <h2 className="text-xl font-black flex items-center gap-2">
-                        <ShoppingCart size={24} className="text-[#D4AF37]" /> قائمة الطلبات
+                        <ShoppingCart size={24} className="text-[#D4AF37]" /> 
                     </h2>
                     <motion.span 
                         key={cart.length}

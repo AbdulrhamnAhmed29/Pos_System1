@@ -4,8 +4,6 @@ import Swal from 'sweetalert2'
 
 export const useMutationProduct = () => {
   const queryClient = useQueryClient();
-
-
   //1- add product function 
   // _______________________
   const addMutation = useMutation({
@@ -23,7 +21,7 @@ export const useMutationProduct = () => {
       const parentResponse = await productService.addProduct(parentPayload);
       const parentId = parentResponse.documentId;
       const productName = parentResponse.name;
-      console.log(productName, parentId);
+      
 
       const childrenPromises = await payload.variants.map((v) => {
         const childPayload = {
@@ -33,6 +31,7 @@ export const useMutationProduct = () => {
             attributes: v.attribute_id,
             barcode: v.barcode,
             parent_id: parentId,
+            buying_price:v.buying_price,
             cost_price: v.cost_price,
             quantity: v.quantity,
           }
@@ -66,7 +65,6 @@ export const useMutationProduct = () => {
     },
   });
 
-
   //2- update product function 
   // ________________________
   const updateMutation = useMutation({
@@ -97,6 +95,7 @@ export const useMutationProduct = () => {
             attributes: v.attribute_id,
             barcode: v.barcode,
             parent_id: parentId,
+            buying_price:v.buying_price,
             cost_price: v.cost_price,
             quantity: v.quantity,
           }
@@ -133,7 +132,6 @@ export const useMutationProduct = () => {
       });
     },
   });
-
   // 3- delete functiuon 
   // ______________________
   const deleteMutation = useMutation({

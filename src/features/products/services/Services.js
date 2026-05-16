@@ -3,7 +3,12 @@ import BaseApi from '../../../api/baseApi';
 const productService = {
   getProducts: async (params = {}) => {
     const { data } = await BaseApi.getAll('/products?pagination[pageSize]=2000&populate=*', { params });
-    
+
+    return data
+  },
+
+  GetProductById: async (id) => {
+    const { data } = await BaseApi.getById("/products", id);
     return data
   },
 
@@ -14,7 +19,7 @@ const productService = {
   },
 
   updateProduct: async (id, payload) => {
-    const { data } = await BaseApi.update(`/products`, id , payload)
+    const { data } = await BaseApi.update(`/products`, id, payload)
     return data
   },
 

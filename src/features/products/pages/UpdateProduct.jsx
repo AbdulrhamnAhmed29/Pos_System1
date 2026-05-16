@@ -33,7 +33,7 @@ function UpdateProduct() {
                         <span className="text-gray-800 font-medium">تعديل منتج</span>
                     </div>
                     <h1 className="text-3xl font-black text-gray-900 flex items-center gap-3">
-                        تعديل: <span className="text-blue-600">{currentProduct?.name || "..."}</span>
+                        تعديل: <span className="text-[#D4AF37]">{currentProduct?.name || "..."}</span>
                     </h1>
                 </div>
 

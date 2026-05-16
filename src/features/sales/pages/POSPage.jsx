@@ -10,6 +10,7 @@ import { CustomToast } from '../../../ui/ToastComponent';
 import { ReceiptDesign } from '../../orders/components/Receipt';
 import { useReactToPrint } from 'react-to-print';
 
+
 const POSPage = () => {
   //  products array 
   const { allProducts } = useNotifications();
@@ -24,17 +25,21 @@ const POSPage = () => {
   const [selectedCategory, setSelectedCategory] = useState('الكل');
   const [selectedSubFilter, setSelectedSubFilter] = useState("الكل");
   const [selectedParent, setSelectedParent] = useState(null);
-  const [selectedAttribute, setSelectedAttribute] = useState('الكل');
+  const [selectedAttribute, setSelectedAttribute] = useState('جركن');
   const searchRef = useRef(null);
   const [toast, setToast] = useState({ show: false, message: "" });
 
+
+
   
+
+
   // reciept data 
 
   const contentRef = useRef(null);
   const [dataToPrint, setDataToPrint] = useState(null);
   const handlePrint = useReactToPrint({
-    contentRef, 
+    contentRef,
   });
 
   //  Model 
@@ -50,9 +55,9 @@ const POSPage = () => {
         onSuccess: () => {
           handlePrint();
           setCart([]);
-          // setTimeout(() => {
-          //   setDataToPrint(null);
-          // }, 1000);
+          setTimeout(() => {
+            setDataToPrint(null);
+          }, 1000);
         },
         onError: (error) => {
           console.error("Error:", error);
@@ -228,7 +233,7 @@ const POSPage = () => {
       />
 
       {dataToPrint && (
-        <div className=''>
+        <div className='hidden'>
           <ReceiptDesign
             ref={contentRef}
             orderData={dataToPrint.orderData}

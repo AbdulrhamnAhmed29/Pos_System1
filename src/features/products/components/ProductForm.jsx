@@ -9,7 +9,7 @@ export default function ProductForm({ categories, brands, Mutate, attributeSet, 
       category_id: '',
       brand_id: '',
       bulk_quantity: 0,
-      variants: [{ attribute_id: '', cost_price: '', quantity: '', barcode: '', attributeSet: '' }]
+      variants: [{ attribute_id: '', buying_price: '', cost_price: '', quantity: '', barcode: '', attributeSet: '' }]
     }
   });
 
@@ -26,12 +26,9 @@ export default function ProductForm({ categories, brands, Mutate, attributeSet, 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="max-w-5xl mx-auto p-8 bg-white rounded-2xl shadow-xl border border-gray-100 space-y-8" dir="rtl">
 
-      <div className="border-b pb-4">
-        <h2 className="text-2xl font-bold text-gray-800">إضافة منتج جديد</h2>
-        <p className="text-black text-sm">أدخل البيانات الأساسية والمتغيرات الخاصة بالمنتج</p>
-      </div>
 
-      {/* القسم الأساسي */}
+
+      {/* Parent product */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div className="flex flex-col gap-2">
           <label className="text-sm font-semibold text-stone-800 mr-1">اسم المنتج</label>
@@ -44,8 +41,8 @@ export default function ProductForm({ categories, brands, Mutate, attributeSet, 
 
         <div className="flex flex-col gap-2">
           <label className="text-sm font-semibold text-stone-800 mr-1">القسم</label>
-          <select 
-            {...register("category_id", { required: true })} 
+          <select
+            {...register("category_id", { required: true })}
             className={`w-full border p-2.5 rounded-lg bg-white outline-none ${errors.category_id ? 'border-red-500' : 'border-gray-300'}`}
           >
             <option value="">اختر القسم</option>
@@ -55,8 +52,8 @@ export default function ProductForm({ categories, brands, Mutate, attributeSet, 
 
         <div className="flex flex-col gap-2">
           <label className="text-sm font-semibold text-stone-800 mr-1">البراند</label>
-          <select 
-            {...register("brand_id", { required: true })} 
+          <select
+            {...register("brand_id", { required: true })}
             className={`w-full border p-2.5 rounded-lg bg-white outline-none ${errors.brand_id ? 'border-red-500' : 'border-gray-300'}`}
           >
             <option value="">اختر البراند</option>
@@ -75,7 +72,7 @@ export default function ProductForm({ categories, brands, Mutate, attributeSet, 
         </div>
       </div>
 
-      {/* قسم المتغيرات */}
+      {/* varients */}
       <div className="space-y-4">
         <div className="flex justify-between items-center bg-gray-50 p-4 rounded-t-xl border-b">
           <h3 className="font-bold text-stone-800">متغيرات المنتج (الأحجام والأنواع)</h3>
@@ -91,11 +88,11 @@ export default function ProductForm({ categories, brands, Mutate, attributeSet, 
         <div className="space-y-4">
           {fields.map((field, index) => (
             <div key={field.id} className="relative grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4 p-6 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-shadow">
-              
+
               <div className="flex flex-col gap-1">
                 <label className="text-xs font-bold text-stone-900 mr-1">نوع المنتج</label>
-                <select 
-                  {...register(`variants.${index}.attributeSet`, { required: true })} 
+                <select
+                  {...register(`variants.${index}.attributeSet`, { required: true })}
                   className={`border p-2 rounded-md text-sm outline-none ${errors.variants?.[index]?.attributeSet ? 'border-red-500' : 'border-gray-300'}`}
                 >
                   <option value="">النوع</option>
@@ -105,8 +102,8 @@ export default function ProductForm({ categories, brands, Mutate, attributeSet, 
 
               <div className="flex flex-col gap-1">
                 <label className="text-xs font-bold text-stone-900 mr-1">الحجم</label>
-                <select 
-                  {...register(`variants.${index}.attribute_id`, { required: true })} 
+                <select
+                  {...register(`variants.${index}.attribute_id`, { required: true })}
                   className={`border p-2 rounded-md text-sm outline-none ${errors.variants?.[index]?.attribute_id ? 'border-red-500' : 'border-gray-300'}`}
                 >
                   <option value="">اختر الحجم</option>
@@ -115,32 +112,42 @@ export default function ProductForm({ categories, brands, Mutate, attributeSet, 
               </div>
 
               <div className="flex flex-col gap-1">
+                <label className="text-xs font-bold text-stone-900 mr-1">سعر الشراء</label>
+                <input
+                  type="number"
+                  {...register(`variants.${index}.buying_price`, )}
+                  placeholder="0.00"
+                  className={`border p-2 rounded-md text-sm outline-none ${errors.variants?.[index]?.buying_price ? 'border-red-500' : 'border-gray-300'}`}
+                />
+              </div>
+              <div className="flex flex-col gap-1">
                 <label className="text-xs font-bold text-stone-900 mr-1">سعر البيع</label>
-                <input 
-                  type="number" 
-                  {...register(`variants.${index}.cost_price`, { required: true, min: 0 })} 
-                  placeholder="0.00" 
-                  className={`border p-2 rounded-md text-sm outline-none ${errors.variants?.[index]?.cost_price ? 'border-red-500' : 'border-gray-300'}`} 
+                <input
+                  type="number"
+                  {...register(`variants.${index}.cost_price`, { required: true, min: 0 })}
+                  placeholder="0.00"
+                  className={`border p-2 rounded-md text-sm outline-none ${errors.variants?.[index]?.cost_price ? 'border-red-500' : 'border-gray-300'}`}
                 />
               </div>
 
               <div className="flex flex-col gap-1">
                 <label className="text-xs font-bold text-stone-900 mr-1">الكمية (قطعة)</label>
-                <input 
-                  type="number" 
-                  {...register(`variants.${index}.quantity`, { required: true, min: 0 })} 
-                  placeholder="0" 
-                  className={`border p-2 rounded-md text-sm outline-none ${errors.variants?.[index]?.quantity ? 'border-red-500' : 'border-gray-300'}`} 
+                <input
+                  type="number"
+                  {...register(`variants.${index}.quantity`,)}
+                  placeholder="0"
+                  className={`border p-2 rounded-md text-sm outline-none ${errors.variants?.[index]?.quantity ? 'border-red-500' : 'border-gray-300'}`}
                 />
               </div>
+            
 
               <div className="flex flex-col gap-1">
                 <label className="text-xs font-bold text-stone-900 mr-1">الباركود (اختياري)</label>
-                <input 
-                  type="text" 
-                  {...register(`variants.${index}.barcode`)} 
-                  placeholder="Barcode" 
-                  className="border border-gray-300 p-2 text-stone-800 rounded-md text-sm outline-none" 
+                <input
+                  type="text"
+                  {...register(`variants.${index}.barcode`)}
+                  placeholder="Barcode"
+                  className="border border-gray-300 p-2 text-stone-800 rounded-md text-sm outline-none"
                 />
               </div>
 
@@ -158,7 +165,6 @@ export default function ProductForm({ categories, brands, Mutate, attributeSet, 
         </div>
       </div>
 
-      {/* رسالة الخطأ العامة */}
       {Object.keys(errors).length > 0 && (
         <div className="bg-red-50 border-r-4 border-red-500 p-4 rounded">
           <p className="text-red-700 text-sm font-bold">

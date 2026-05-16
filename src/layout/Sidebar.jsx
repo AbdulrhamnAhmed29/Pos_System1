@@ -1,11 +1,12 @@
 import { useState } from 'react'
-import { 
-    Menu, LogOut, LayoutDashboard, Droplets, X, 
-    Box, Wallet, ShoppingCart, AlertTriangle, 
-    ChevronRight, ChevronLeft 
+import {
+    Menu, LogOut, LayoutDashboard, Droplets, X,
+    Box, Wallet, ShoppingCart, AlertTriangle,
+    ChevronRight, ChevronLeft
 } from 'lucide-react'
 import { Link, useLocation } from 'react-router-dom'
-import { useLogout } from '../features/auth' // تأكد من المسار حسب مشروعك
+import { useLogout } from '../features/auth'
+import Swal from 'sweetalert2'
 
 const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
     const [isMobileOpen, setIsMobileOpen] = useState(false)
@@ -13,14 +14,39 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
     const location = useLocation()
     const isActive = (path) => location.pathname === path
 
+    const handleLogout = () => {
+        Swal.fire({
+            title: 'هل تريد تسجيل الخروج؟',
+            text: "سيتم إنهاء الجلسة الحالية والعودة لصفحة الدخول",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#D4AF37',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'نعم، سجل الخروج',
+            cancelButtonText: 'إلغاء',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                logout()
+
+                Swal.fire({
+                    title: 'تم الخروج!',
+                    icon: 'success',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
+        });
+    }
     const menuItems = [
         { path: '/pos', label: 'ابداء البيع', icon: ShoppingCart },
-        { path: '/dashboard', label: 'الإحصائيات', icon: LayoutDashboard },
         { path: '/products', label: 'المخزون', icon: Box },
-        { path: '/restock', label: 'المنتجات الناقصة', icon: AlertTriangle },
         { path: '/Sales', label: 'المبيعات', icon: Wallet },
+        { path: '/restock', label: 'المنتجات الناقصة', icon: AlertTriangle },
         { path: '/expense', label: 'المصاريف', icon: Wallet },
+        { path: '/dashboard', label: 'الإحصائيات', icon: LayoutDashboard },
     ];
+
 
     return (
         <>
@@ -32,7 +58,7 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
             </button>
 
             {isMobileOpen && (
-                <div 
+                <div
                     className="fixed inset-0 bg-zinc-900/40 backdrop-blur-sm z-40 lg:hidden transition-opacity"
                     onClick={() => setIsMobileOpen(false)}
                 />
@@ -65,14 +91,14 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
                     </button>
                 </div>
 
-                <button 
+                <button
                     onClick={() => setIsCollapsed(!isCollapsed)}
                     className="hidden lg:flex absolute -left-3 top-24 w-6 h-6 bg-[#D4AF37] rounded-full items-center justify-center text-stone-950 shadow-xl hover:scale-110 transition-all z-50"
                 >
                     {isCollapsed ? <ChevronLeft size={14} /> : <ChevronRight size={14} />}
                 </button>
 
-                {/* القائمة */}
+                {/*  */}
                 <nav className="flex-1 px-3 py-6 space-y-2 overflow-y-auto custom-scrollbar ">
                     {menuItems.map((item) => {
                         const Icon = item.icon
@@ -86,12 +112,12 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
                                 className={`
                                     flex items-center gap-4 px-3 py-3.5 rounded-2xl transition-all duration-300 group relative
                                     ${active
-                                        ? 'bg-[#D4AF37] text-stone-950 shadow-lg shadow-[#D4AF37]/10'
+                                        ? 'bg-[linear-gradient(135deg,#D4AF37_0%,#F3E5AB_100%)]'
                                         : 'text-zinc-400 hover:bg-white/5 hover:text-white'}
                                 `}
                             >
                                 <Icon size={22} strokeWidth={active ? 2.5 : 2} className="shrink-0 transition-transform group-hover:scale-110" />
-                                
+
                                 {!isCollapsed && (
                                     <span className="text-sm font-bold whitespace-nowrap animate-in fade-in duration-300">
                                         {item.label}
@@ -106,10 +132,9 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
                     })}
                 </nav>
 
-                {/* تسجيل الخروج */}
                 <div className="p-4 border-t border-white/5">
                     <button
-                        onClick={logout}
+                        onClick={handleLogout}
                         className={`
                             w-full flex items-center gap-4 px-3 py-4 rounded-2xl text-red-400 font-bold text-sm
                             hover:bg-red-500/10 transition-all group overflow-hidden

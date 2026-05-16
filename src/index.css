@@ -9,13 +9,11 @@
 .shadow-custom {
 box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;}
 
-/* 1. تخصيص الحاوية العامة للسكرول */
 ::-webkit-scrollbar {
   width: 8px;              /* عرض السكرول الرأسي */
   height: 8px;             /* ارتفاع السكرول الأفقي */
 }
 
-/* 2. خلفية المسار (الخلفية التي يتحرك عليها السكرول) */
 ::-webkit-scrollbar-track {
   background: #323a04;     
   border-radius: 10px;
@@ -29,19 +27,16 @@ input[type=number]::-webkit-outer-spin-button {
 
 
 
-/* 3. المقبض (الجزء المتحرك الذي يمسكه المستخدم) */
 ::-webkit-scrollbar-thumb {
-  background: #27272a;     /* لون الـ zinc-800 (رمادي غامق جداً) */
+  background: #27272a;     
   border-radius: 10px;
-  border: 2px solid #f4f4f5; /* يعطي مساحة صغيرة حول المقبض لجعله يبدو "طائفاً" */
+  border: 2px solid #f4f4f5; 
 }
 
-/* 4. عند تمرير الماوس فوق المقبض (Hover) */
 ::-webkit-scrollbar-thumb:hover {
-  background: #D4AF37;     /* يتحول للون الذهبي عند اللمس */
+  background: #D4AF37;     
 }
 
-/* تخصيص السكرول لمتصفح Firefox */
 * {
   scrollbar-width: thin;
   scrollbar-color: #27272a #f4f4f5;

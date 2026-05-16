@@ -2,7 +2,7 @@ import React, { useMemo, useEffect, useState } from 'react';
 import {
     BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
 } from 'recharts';
-import { TrendingUp, Wallet, Zap, Package } from 'lucide-react';
+import { Wallet, Zap, Package } from 'lucide-react';
 import { useStatistcs } from '../hooks/useStatistics';
 import { motion, animate } from 'framer-motion';
 
@@ -46,26 +46,8 @@ const Statistics = () => {
         }, 0) || 0;
     }, [ReportsExpesnse]);
 
-    const netProfit = useMemo(() => TotalOrdersPrices - TotalExpenses, [TotalOrdersPrices, TotalExpenses]);
+    const sales = TotalOrdersPrices;
     const cashInDrawer = useMemo(() => TotalOrdersPrices - TotalDailyExpenses, [TotalOrdersPrices, TotalDailyExpenses]);
-
-    // Expenses Analysis 
-    const ExpensesAnalysis = useMemo(() => {
-        if (!ReportsExpesnse || ReportsExpesnse.length === 0) return [];
-        const grouped = ReportsExpesnse.reduce((acc, curr) => {
-            const category = curr.type || "أخرى";
-            acc[category] = (acc[category] || 0) + Number(curr.price || 0);
-            return acc;
-        }, {});
-
-        return Object.entries(grouped).map(([type, amount]) => ({
-            type,
-            amount,
-            percentage: TotalExpenses > 0 ? ((amount / TotalExpenses) * 100).toFixed(1) : 0
-        })).sort((a, b) => b.amount - a.amount);
-    }, [ReportsExpesnse, TotalExpenses]);
-
-
 
     // best sellers 
     const topSellingProducts = useMemo(() => {
@@ -98,7 +80,6 @@ const Statistics = () => {
             .slice(0, 5);
     }, [reportsOrders]);
 
-    console.log(topSellingProducts);
 
 
 
@@ -148,7 +129,7 @@ const Statistics = () => {
             {/*  (Real Data) */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
                 {[
-                    { label: 'صافي الربح', value: netProfit, icon: TrendingUp, color: '#10b981' },
+                    { label: 'المبيعات', value: sales, icon: Zap, color: '#D4AF37' },
                     { label: '(الخوارج)المصاريف', value: TotalExpenses, icon: Wallet, color: '#ef4444' },
                     { label: '  خزنة الكاشير (الدرج)', value: cashInDrawer, icon: Zap, color: '#D4AF37' },
                     { label: 'عدد الاوردرات', value: totalOrdersCount, icon: Package, color: '#6366f1', isUnit: false },
@@ -161,12 +142,14 @@ const Statistics = () => {
                         className="bg-white p-6 shadow-xl shadow-gray-100/50 rounded-2xl border-b-4 border-[#D4AF37] flex items-center justify-between"
                     >
                         <div>
-                            <p className="text-gray-400 text-[11px] font-black uppercase mb-1">{card.label}</p>
+                            <p className="text-gray-400 text-[16px] font-black uppercase mb-1">{card.label}</p>
                             <h3 className="text-2xl font-black text-zinc-800">
                                 <AnimatedNumber value={card.value} />
                                 {card.isUnit !== false && <span className="text-xs mr-1 text-gray-400 font-medium">ج.م</span>}
                             </h3>
+
                         </div>
+
                         <div className="p-3 rounded-xl bg-gray-50">
                             <card.icon style={{ color: card.color }} size={28} />
                         </div>
@@ -176,51 +159,7 @@ const Statistics = () => {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
-                {/*  Expenses  */}
-                <motion.div
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100"
-                >
-                    <div className="flex items-center justify-between mb-10">
-                        <div>
-                            <h3 className="text-xl font-black mb-1">توزيع المصاريف</h3>
-                            <p className="text-gray-400 text-xs font-bold uppercase tracking-wider">بناءً على الفئات المسجلة</p>
-                        </div>
-                        <div className="text-left">
-                            <span className="text-[10px] block text-gray-400 font-black uppercase">الإجمالي</span>
-                            <span className="text-xl font-black"><AnimatedNumber value={TotalExpenses} /> ج.م</span>
-                        </div>
-                    </div>
-
-                    <div className="space-y-8">
-                        {ExpensesAnalysis.map((item, index) => (
-                            <div key={index} className="group">
-                                <div className="flex justify-between items-center mb-3">
-                                    <div className="flex items-center gap-3">
-                                        <span className="w-8 h-8 flex items-center justify-center rounded-lg bg-gray-50 text-gray-400 text-xs font-black group-hover:bg-[#D4AF37] group-hover:text-white transition-all">
-                                            {index + 1}
-                                        </span>
-                                        <div>
-                                            <span className="text-zinc-800 font-black text-sm block">{item.type}</span>
-                                            <span className="text-[10px] text-gray-400 font-bold tracking-tight">قيمة: {item.amount.toLocaleString()} ج.م</span>
-                                        </div>
-                                    </div>
-                                    <span className="font-black text-[#D4AF37]">{item.percentage}%</span>
-                                </div>
-                                <div className="h-2 bg-gray-100 rounded-full overflow-hidden shadow-inner">
-                                    <motion.div
-                                        initial={{ width: 0 }}
-                                        animate={{ width: `${item.percentage}%` }}
-                                        transition={{ duration: 1.5, ease: "easeOut" }}
-                                        className="h-full rounded-full shadow-lg"
-                                        style={{ background: goldenGradient }}
-                                    />
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </motion.div>
+          
                 {/* sales diagram */}
                 <motion.div
                     initial={{ opacity: 0, x: -20 }}
@@ -249,7 +188,7 @@ const Statistics = () => {
                                     axisLine={false}
                                     tickLine={false}
                                     tick={{ fill: '#9CA3AF', fontSize: 10, fontWeight: 700 }}
-                                    interval={0} 
+                                    interval={0}
                                     dy={10}
                                 />
                                 <YAxis
@@ -269,7 +208,7 @@ const Statistics = () => {
                                     formatter={(value) => [`${value} قطعة`, 'إجمالي الكمية']}
                                 />
                                 <Bar
-                                    dataKey="totalQty" 
+                                    dataKey="totalQty"
                                     fill="url(#barGold)"
                                     radius={[10, 10, 0, 0]}
                                     barSize={45}

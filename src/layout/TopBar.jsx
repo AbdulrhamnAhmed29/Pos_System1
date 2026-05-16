@@ -136,7 +136,7 @@ const TopBar = ({ isCollapsed }) => {
                             {lowStockProducts?.length > 0 && (
                                 <div className="p-3 bg-zinc-50/50 border-t border-zinc-100">
                                     <button className="w-full py-2.5 bg-white border border-zinc-200 rounded-xl text-xs font-bold text-zinc-700 hover:bg-zinc-950 hover:text-white transition-all duration-300 shadow-sm">
-                                        عرض تقرير النواقص الكامل
+                                        <Link to={"/restock"}> عرض تقرير النواقص الكامل</Link>
                                     </button>
                                 </div>
                             )}

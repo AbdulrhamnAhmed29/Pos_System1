@@ -10,7 +10,7 @@ export const useOrders = (id) => {
     // to reports 
     const [startDay, setStartDay] = useState(today1);
     const [endDay, setEndDay] = useState(today1);
-
+ 
 
     //   to table orders 
     const { data: orders, isLoading, isFetching } = useQuery({
@@ -22,14 +22,13 @@ export const useOrders = (id) => {
 
 
     // to reports 
-    const { data: reportsOrders } = useQuery({
+    const { data:reportsOrders } = useQuery({
         queryKey: ["ordersToReports", startDay, endDay],
         queryFn: () => servicesOrders.getOrdersToReports(startDay, endDay),
         keepPreviousData: true,
     });
 
-
-
+    
 
     const {
         data: orderById,
@@ -64,9 +63,7 @@ export const useOrders = (id) => {
         startDay,
         setStartDay,
         setEndDay,
-        reportsOrders,
-
-      
+        reportsOrders
 
     };
 };

@@ -7,8 +7,12 @@ import productService from '../../products/services/Services';
 
 
 export const useOrderMutation = () => {
-  const queryClient = useQueryClient()
+    const queryClient = useQueryClient()
     const { data } = useGetProducts()
+    const playSaleSound = () => {
+        const audio = new Audio('/sound/sell.mp3'); 
+        audio.play().catch(err => console.log("الصوت محتاج تفاعل أولاً"));
+    };
     const mutation = useMutation({
         mutationFn: async ({ orderData, cart }) => {
             const orderResponse = await servicesOrders.createOrder({
@@ -34,7 +38,6 @@ export const useOrderMutation = () => {
                 let targetDocId = item.documentId;
 
                 const is_bulk = item.attribute_sets?.[0]?.name === "سايب";
-
                 if (is_bulk) {
                     // if bulk parent discount 
                     const parentProductDocId = originalProduct?.parent_id;
@@ -48,7 +51,6 @@ export const useOrderMutation = () => {
 
                         const itemStockFactor = conversionFactor * Number(item.quantity);
                         const finalStockInBulk = currentStockInBulk - itemStockFactor;
-
                         updatePayload = { bulk_quantity: finalStockInBulk };
                         targetDocId = parentProduct.documentId;
                     }
@@ -67,13 +69,12 @@ export const useOrderMutation = () => {
                         order: orderDocId,
                         product: item.documentId,
                         quantityInOrder: item.quantity,
+                        buying_price:item.buying_price,
                         unit_price: item.cost_price,
                         sub_total: item.cost_price * item.quantity,
                         attribute_sets: item.attribute_sets?.[0]?.documentId
                     }
                 };
-
-
                 return Promise.all([
                     servicesOrders.createOrdersItems(orderItemsPayload),
                     productService.updateProduct(targetDocId, { data: updatePayload })
@@ -82,26 +83,30 @@ export const useOrderMutation = () => {
 
             return await Promise.all(itemPromises);
         },
+        onSuccess: () => {
+            playSaleSound()
+            queryClient.invalidateQueries({ queryKey: ["products"] });
+            queryClient.invalidateQueries({ queryKey: ["ordersToReports"] });
+        },
 
     });
 
-const updateMutation = useMutation({
-    mutationFn:({id , payload})=>servicesOrders.updateOrder( id , {
-        data:{
-            customer:payload.updatedData.customer,
-            status_order:payload.updatedData.status_order
-        },
-        onError:(error)=>{
-            console.log(error);
-             
-        }
+    const updateMutation = useMutation({
+        mutationFn: ({ id, payload }) => servicesOrders.updateOrder(id, {
+            data: {
+                customer: payload.updatedData.customer,
+                status_order: payload.updatedData.status_order
+            },
+            onError: (error) => {
+                console.log(error);
+            }
+        })
     })
-})
 
     const removeMutation = useMutation({
         mutationFn: (id) => servicesOrders.deleteOrder(id),
         onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['orders'] });
+            queryClient.invalidateQueries({ queryKey: ['orders'] });
             console.log("Order deleted and list updated");
         },
         onError: (err) => {
@@ -115,7 +120,7 @@ const updateMutation = useMutation({
         isLoading: mutation.isPending,
         isSuccess: mutation.isSuccess,
         error: mutation.error,
-        update:updateMutation.mutate,
+        update: updateMutation.mutate,
         remove: removeMutation.mutate
     };
 };

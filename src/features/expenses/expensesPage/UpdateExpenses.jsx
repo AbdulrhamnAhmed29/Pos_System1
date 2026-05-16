@@ -89,8 +89,6 @@ function UpdateExpenses() {
                             >
                                 <option value="مصاريف يومية">مصاريف يومية</option>
                                 <option value="بضاعة">بضاعة</option>
-                                <option value="ميه">ميه</option>
-                                <option value="كهربا">كهربا</option>
                             </select>
                         </div>
 
